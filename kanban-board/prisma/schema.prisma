@@ -1,0 +1,101 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Board {
+  id         Int     @id @default(autoincrement())
+  title      String
+  background String?
+
+  statusLists StatusList[]
+}
+
+model StatusList {
+  id       Int    @id @default(autoincrement())
+  name     String
+  position Int
+
+  boardId Int
+  board   Board @relation(fields: [boardId], references: [id])
+
+  cards Card[]
+}
+
+model Card {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  beginDate   DateTime?
+  endDate     DateTime?
+
+  statusListId Int
+  statusList   StatusList @relation(fields: [statusListId], references: [id])
+  tagId        Int
+  tag          Tag        @relation(fields: [tagId], references: [id])
+
+  attachments Attachment[]
+  comments    Comment[]
+  users       User[]
+  checklists  Checklist[]
+}
+
+model Attachment {
+  id      Int    @id @default(autoincrement())
+  content String
+
+  cardId Int
+  card   Card @relation(fields: [cardId], references: [id])
+}
+
+model Comment {
+  id      Int    @id @default(autoincrement())
+  message String
+
+  cardId Int
+  card   Card @relation(fields: [cardId], references: [id])
+}
+
+model Tag {
+  id              Int     @id @default(autoincrement())
+  name            String
+  backgroundColor String?
+  fontColor       String?
+
+  cards Card[]
+}
+
+model User {
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  passHash String
+
+  cards Card[]
+}
+
+model Checklist {
+  id    Int    @id @default(autoincrement())
+  title String
+
+  cardId Int
+  card   Card @relation(fields: [cardId], references: [id])
+
+  checklistItems ChecklistItem[]
+}
+
+model ChecklistItem {
+  id          Int     @id @default(autoincrement())
+  description String
+  isDone      Boolean
+
+  checklistId Int
+  checklist   Checklist @relation(fields: [checklistId], references: [id])
+}
