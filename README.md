@@ -3,16 +3,19 @@
 Pedro Nogueira  
 25 of October, 2023  
 
-## Instalation and usage
+## Usage
 
 The project uses Postgres inside a [Docker](https://www.docker.com/) container.  
 
 [Prisma](https://www.prisma.io/) is used to connect the project with the database.  
 
-```
-npm add -D prisma
-npm add @prisma/client
-```
+For class validation pipes inside my DTOs, I'm using [Validation pipes](https://docs.nestjs.com/techniques/validation).  
+
+For password hash creation, I'm using [argon2](https://www.npmjs.com/package/argon2).  
+
+For environment variables usage, [NestJS config](https://docs.nestjs.com/techniques/configuration).  
+
+For JWT passports for authentication usage, [JWT passports](https://docs.nestjs.com/security/authentication).  
 
 ## Introduction
 

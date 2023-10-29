@@ -1,14 +1,17 @@
 25/10/2023
 Day one of this whole ordeal. Just received the assignment from HR to complete this due the 9th.
 I already made the project in my github, but I'm gonna have to study some stuff, like NestJS, how to integrate Postgres
-  to it, and how to do authorization checks in REST.
+  to it, and how to do authentication checks in REST.
 
 27/10/2023
 I have studied what I needed to (even completed a side project doing so) and now I'm ready to start.
 I'm gonna use Postgres in Docker, gonna use Prisma to get access to the db, JWT Guards with Passport Strategies to
   manage access, and argon to hash stuff up.
-Today I made a first relational db schema, which is gonna be here in /docs/bd-diagram.png.
+Today I made a first relational db schema diagram, which is gonna be here in /docs/bd-diagram.png.
 
 28/10/2023
 I woke up thinking of a problem in the db: if the tag has a color, so a card can only have one tag, so it's not a many
-  to many relation. I just updated the db to match this.
+  to many relation. I just updated the db to match this. I'm tackling the authentication of the user first, and that's
+  what I could commit for today (tomorrow because I'm off to see momma).
+
+
