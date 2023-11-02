@@ -17,6 +17,10 @@ For environment variables usage, [NestJS config](https://docs.nestjs.com/techniq
 
 For JWT passports for authentication usage, [JWT passports](https://docs.nestjs.com/security/authentication).  
 
+For e2e test mocking, I'm using [pactum](https://pactumjs.github.io/).  
+
+To use different config files in dev and testing, I'm using [dotenv](https://docs.nestjs.com/techniques/configuration).  
+
 ## Introduction
 
 I've received this challenge in the 25<sup>th</sup> of October, 2023, with the deadline on the 9<sup>th</sup> of November.  

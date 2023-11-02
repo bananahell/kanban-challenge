@@ -54,8 +54,8 @@ export class AuthService {
     if (!user) {
       throw new ForbiddenException(ErrorMessages.auth_emailNotFound);
     }
-    const pwMatch = await argon2.verify(user.passHash, dto.password);
-    if (!pwMatch) {
+    const passwordsMatch = await argon2.verify(user.passHash, dto.password);
+    if (!passwordsMatch) {
       throw new ForbiddenException(ErrorMessages.auth_incorrectPassword);
     }
     return this.signToken(user.id, user.email);

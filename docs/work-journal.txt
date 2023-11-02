@@ -14,4 +14,6 @@ I woke up thinking of a problem in the db: if the tag has a color, so a card can
   to many relation. I just updated the db to match this. I'm tackling the authentication of the user first, and that's
   what I could commit for today (tomorrow because I'm off to see momma).
 
-
+29/10/2023
+I finished the auth part for the user, which means I can now start messing with the bulk of the code! But I'm gonna lay
+  off it for a good part of the week to make some progress in my graduation project.
