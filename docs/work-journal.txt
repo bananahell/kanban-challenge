@@ -17,3 +17,8 @@ I woke up thinking of a problem in the db: if the tag has a color, so a card can
 29/10/2023
 I finished the auth part for the user, which means I can now start messing with the bulk of the code! But I'm gonna lay
   off it for a good part of the week to make some progress in my graduation project.
+
+02/11/2023
+Started strong by noticing the db I made was wrong s2 I didn't put board and comment owners, so I had to fix that first.
+I've almost finished the board by the end of the day, just needing to add one last feature. Here's to hoping the board
+  is the most complicated logic in the project...

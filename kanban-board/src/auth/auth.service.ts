@@ -34,7 +34,7 @@ export class AuthService {
     } catch (error) {
       // P2002 is the error code for "unique field already exists", in this case the email
       if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw new ForbiddenException(ErrorMessages.auth_credentialsTaken);
+        throw new ForbiddenException(ErrorMessages.AuthCredentialsTaken);
       }
       throw error;
     }
@@ -52,11 +52,11 @@ export class AuthService {
       },
     });
     if (!user) {
-      throw new ForbiddenException(ErrorMessages.auth_emailNotFound);
+      throw new ForbiddenException(ErrorMessages.AuthEmailNotFound);
     }
     const passwordsMatch = await argon2.verify(user.passHash, dto.password);
     if (!passwordsMatch) {
-      throw new ForbiddenException(ErrorMessages.auth_incorrectPassword);
+      throw new ForbiddenException(ErrorMessages.AuthIncorrectPassword);
     }
     return this.signToken(user.id, user.email);
   }

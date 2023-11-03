@@ -1,0 +1,68 @@
+// Created at https://dbdiagram.io/
+
+Table Board {
+  id Int [PK]
+  title String
+  background String
+  users User[] [ref: < User.id]
+  owner Int [ref: > User.id]
+  statusLists StatusList[] [ref: < StatusList.id]
+}
+
+Table StatusList {
+  id Int [PK]
+  name String
+  position Int
+  cards Card[] [ref: < Card.id]
+}
+
+Table Card {
+  users User[] [ref: < User.id]
+  id Int [PK]
+  title String
+  description String
+  beginDate DateTime
+  endDate DateTime
+  comments Comment[] [ref: < Comment.id]
+  checklists Checklist[] [ref: < Checklist.id]
+  attachments Attachment[] [ref: < Attachment.id]
+}
+
+Table Tag {
+  id Int [PK]
+  name String
+  backgroundColor String
+  fontColor String
+  cards Card[] [ref: < Card.id]
+}
+
+Table Attachment {
+  id Int [PK]
+  content String
+}
+
+Table User {
+  id Int [PK]
+  name String
+  email String
+  passHash String
+  cards Card[] [ref: < Card.id]
+}
+
+Table Comment {
+  id Int [PK]
+  message String
+  user Int [ref: > User.id]
+}
+
+Table Checklist {
+  id Int [PK]
+  title String
+  checklistItems ChecklistItem[] [ref: < ChecklistItem.id]
+}
+
+Table ChecklistItem {
+  id Int [PK]
+  description String
+  isDone Boolean
+}
