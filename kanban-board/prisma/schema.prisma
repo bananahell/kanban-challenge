@@ -28,7 +28,7 @@ model StatusList {
   position Int
 
   boardId Int
-  board   Board @relation(fields: [boardId], references: [id])
+  board   Board @relation(fields: [boardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   cards Card[]
 }
@@ -41,7 +41,7 @@ model Card {
   endDate     DateTime?
 
   statusListId Int
-  statusList   StatusList @relation(fields: [statusListId], references: [id])
+  statusList   StatusList @relation(fields: [statusListId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   tagId        Int
   tag          Tag        @relation(fields: [tagId], references: [id])
 
@@ -56,7 +56,7 @@ model Attachment {
   content String
 
   cardId Int
-  card   Card @relation(fields: [cardId], references: [id])
+  card   Card @relation(fields: [cardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Comment {
@@ -64,10 +64,9 @@ model Comment {
   message String
 
   userId Int
-  user User @relation(fields: [userId], references: [id])
-
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   cardId Int
-  card   Card @relation(fields: [cardId], references: [id])
+  card   Card @relation(fields: [cardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model Tag {
@@ -96,7 +95,7 @@ model Checklist {
   title String
 
   cardId Int
-  card   Card @relation(fields: [cardId], references: [id])
+  card   Card @relation(fields: [cardId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 
   checklistItems ChecklistItem[]
 }
@@ -107,5 +106,5 @@ model ChecklistItem {
   isDone      Boolean
 
   checklistId Int
-  checklist   Checklist @relation(fields: [checklistId], references: [id])
+  checklist   Checklist @relation(fields: [checklistId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }

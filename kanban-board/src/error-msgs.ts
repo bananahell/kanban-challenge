@@ -7,4 +7,5 @@ export enum ErrorMessages {
   NotAllowedToDelete = 'User not allowed to delete resource!',
   CantRemoveOwnerUser = 'Owner cannot remove self from board users!',
   CantPassOwnerToOwner = 'Ownership cannot be passed to owner!',
+  UserNotInBoard = 'Cannot see boards in which user is not working in!',
 }

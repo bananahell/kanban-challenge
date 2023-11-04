@@ -1,16 +1,24 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AddUserDto, CreateBoardDto, EditBoardDto } from './dto';
 import { ErrorMessages } from '../error-msgs';
+import { ValidationService } from '../validation.service';
 
 @Injectable()
 export class BoardService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private validationService: ValidationService,
+  ) {}
 
   getBoards(userId: number) {
     return this.prismaService.board.findMany({
       where: {
-        ownerId: userId,
+        users: {
+          some: {
+            id: userId,
+          },
+        },
       },
     });
   }
@@ -19,7 +27,11 @@ export class BoardService {
     return this.prismaService.board.findFirst({
       where: {
         id: boardId,
-        ownerId: userId,
+        users: {
+          some: {
+            id: userId,
+          },
+        },
       },
     });
   }
@@ -35,7 +47,7 @@ export class BoardService {
   }
 
   async editBoardById(userId: number, boardId: number, dto: EditBoardDto) {
-    this.checkForBoard(userId, boardId).catch();
+    this.validationService.checkForBoard(userId, boardId).catch();
     return this.prismaService.board.update({
       where: {
         id: boardId,
@@ -47,7 +59,7 @@ export class BoardService {
   }
 
   async deleteBoardById(userId: number, boardId: number) {
-    this.checkForBoard(userId, boardId).catch();
+    this.validationService.checkForBoard(userId, boardId).catch();
     await this.prismaService.board.delete({
       where: {
         id: boardId,
@@ -56,7 +68,7 @@ export class BoardService {
   }
 
   async addBoardUser(userId: number, dto: AddUserDto) {
-    this.checkForBoard(userId, dto.boardId).catch();
+    this.validationService.checkForBoard(userId, dto.boardId).catch();
     return this.prismaService.board.update({
       where: {
         id: dto.boardId,
@@ -75,7 +87,7 @@ export class BoardService {
     if (userId === dto.userId) {
       throw new ForbiddenException(ErrorMessages.CantRemoveOwnerUser);
     }
-    this.checkForBoard(userId, dto.boardId).catch();
+    this.validationService.checkForBoard(userId, dto.boardId).catch();
     const boardUsers = await this.prismaService.board.findUnique({
       where: {
         id: dto.boardId,
@@ -97,7 +109,7 @@ export class BoardService {
   }
 
   async passOwnership(userId: number, dto: AddUserDto) {
-    const board = await this.checkForBoard(userId, dto.boardId).catch();
+    const board = await this.validationService.checkForBoard(userId, dto.boardId).catch();
     if (board.ownerId === dto.userId) {
       throw new ForbiddenException(ErrorMessages.CantPassOwnerToOwner);
     }
@@ -110,20 +122,5 @@ export class BoardService {
         ownerId: dto.userId,
       },
     });
-  }
-
-  async checkForBoard(userId: number, boardId: number) {
-    const board = await this.prismaService.board.findUnique({
-      where: {
-        id: boardId,
-      },
-    });
-    if (!board) {
-      throw new ForbiddenException(ErrorMessages.ResourceNotFound);
-    }
-    if (board.ownerId != userId) {
-      throw new ForbiddenException(ErrorMessages.NotAllowedToEdit);
-    }
-    return board;
   }
 }
