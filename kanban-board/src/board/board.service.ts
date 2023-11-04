@@ -47,7 +47,7 @@ export class BoardService {
   }
 
   async editBoardById(userId: number, boardId: number, dto: EditBoardDto) {
-    this.validationService.checkForBoard(userId, boardId).catch();
+    this.validationService.checkForBoardOwner(userId, boardId).catch();
     return this.prismaService.board.update({
       where: {
         id: boardId,
@@ -59,7 +59,7 @@ export class BoardService {
   }
 
   async deleteBoardById(userId: number, boardId: number) {
-    this.validationService.checkForBoard(userId, boardId).catch();
+    this.validationService.checkForBoardOwner(userId, boardId).catch();
     await this.prismaService.board.delete({
       where: {
         id: boardId,
@@ -68,7 +68,7 @@ export class BoardService {
   }
 
   async addBoardUser(userId: number, dto: AddUserDto) {
-    this.validationService.checkForBoard(userId, dto.boardId).catch();
+    this.validationService.checkForBoardOwner(userId, dto.boardId).catch();
     return this.prismaService.board.update({
       where: {
         id: dto.boardId,
@@ -87,7 +87,7 @@ export class BoardService {
     if (userId === dto.userId) {
       throw new ForbiddenException(ErrorMessages.CantRemoveOwnerUser);
     }
-    this.validationService.checkForBoard(userId, dto.boardId).catch();
+    this.validationService.checkForBoardOwner(userId, dto.boardId).catch();
     const boardUsers = await this.prismaService.board.findUnique({
       where: {
         id: dto.boardId,
@@ -109,7 +109,7 @@ export class BoardService {
   }
 
   async passOwnership(userId: number, dto: AddUserDto) {
-    const board = await this.validationService.checkForBoard(userId, dto.boardId).catch();
+    const board = await this.validationService.checkForBoardOwner(userId, dto.boardId).catch();
     if (board.ownerId === dto.userId) {
       throw new ForbiddenException(ErrorMessages.CantPassOwnerToOwner);
     }

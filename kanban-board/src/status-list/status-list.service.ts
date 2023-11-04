@@ -12,6 +12,7 @@ export class StatusListService {
   ) {}
 
   getStatusListById(userId: number, statusListId: number) {
+    this.validationService.checkForStatusListUser(userId, statusListId);
     return this.prismaService.statusList.findUnique({
       where: {
         id: statusListId,
@@ -27,19 +28,7 @@ export class StatusListService {
   }
 
   async getStatusListsOfBoard(userId: number, boardId: number) {
-    const board = await this.prismaService.board.findUnique({
-      where: {
-        id: boardId,
-        users: {
-          some: {
-            id: userId,
-          },
-        },
-      },
-    });
-    if (!board) {
-      throw new ForbiddenException(ErrorMessages.UserNotInBoard);
-    }
+    this.validationService.checkForBoardUser(userId, boardId);
     return this.prismaService.statusList.findMany({
       where: {
         boardId: boardId,
@@ -48,7 +37,7 @@ export class StatusListService {
   }
 
   async createStatusList(userId: number, dto: CreateStatusListDto) {
-    this.validationService.checkForBoard(userId, dto.boardId);
+    this.validationService.checkForBoardUser(userId, dto.boardId);
     return this.prismaService.statusList.create({
       data: {
         ...dto,
@@ -57,7 +46,7 @@ export class StatusListService {
   }
 
   async deleteStatusListById(userId: number, statusListId: number) {
-    this.validationService.checkForBoard(userId, statusListId).catch();
+    this.validationService.checkForBoardUser(userId, statusListId).catch();
     return this.prismaService.statusList.delete({
       where: {
         id: statusListId,
@@ -66,12 +55,7 @@ export class StatusListService {
   }
 
   async editStatusListById(userId: number, statusListId: number, dto: EditStatusListDto) {
-    const statusList = await this.prismaService.statusList.findUnique({
-      where: {
-        id: statusListId,
-      },
-    });
-    this.validationService.checkForBoard(userId, statusList.boardId);
+    this.validationService.checkForStatusListUser(userId, statusListId);
     return this.prismaService.statusList.update({
       where: {
         id: statusListId,
