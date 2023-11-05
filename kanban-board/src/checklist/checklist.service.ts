@@ -10,6 +10,12 @@ export class ChecklistService {
     private validationService: ValidationService,
   ) {}
 
+  /**
+   * Get all checklists in a card.
+   * @param userId Session user id.
+   * @param cardId Card's id.
+   * @returns All checklists inside a card.
+   */
   async getChecklistsByCard(userId: number, cardId: number) {
     await this.validationService.checkForCardUser(userId, cardId);
     return await this.prismaService.checklist.findMany({
@@ -19,6 +25,12 @@ export class ChecklistService {
     });
   }
 
+  /**
+   * Get a checklist by its id.
+   * @param userId Session user id.
+   * @param checklistId Checklist's id.
+   * @returns The checklist found.
+   */
   async getChecklistById(userId: number, checklistId: number) {
     await this.validationService.checkForChecklistUser(userId, checklistId);
     return await this.prismaService.checklist.findUnique({
@@ -28,6 +40,12 @@ export class ChecklistService {
     });
   }
 
+  /**
+   * Creates a checklist in a card in the database.
+   * @param userId Session user id.
+   * @param dto Data from controller.
+   * @returns The newly created checklist.
+   */
   async createChecklist(userId: number, dto: CreateChecklistDto) {
     await this.validationService.checkForCardUser(userId, dto.cardId);
     return await this.prismaService.checklist.create({
@@ -37,6 +55,12 @@ export class ChecklistService {
     });
   }
 
+  /**
+   * Deletes a checklist by its id.
+   * @param userId Session user id.
+   * @param checklistId Checklist's id.
+   * @returns Nothing.
+   */
   async deleteChecklistById(userId: number, checklistId: number) {
     await this.validationService.checkForChecklistUser(userId, checklistId);
     return await this.prismaService.checklist.delete({
@@ -46,6 +70,13 @@ export class ChecklistService {
     });
   }
 
+  /**
+   * Edits a checklist by its id.
+   * @param userId Session user id.
+   * @param checklistId Checklist's id.
+   * @param dto Data from controller.
+   * @returns The just edited checklist.
+   */
   async editChecklistById(userId: number, checklistId: number, dto: EditChecklistDto) {
     await this.validationService.checkForChecklistUser(userId, checklistId);
     return await this.prismaService.checklist.update({

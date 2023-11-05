@@ -11,6 +11,12 @@ export class StatusListService {
     private validationService: ValidationService,
   ) {}
 
+  /**
+   * Gets a status list by its id.
+   * @param userId Session user id.
+   * @param statusListId Status list's id.
+   * @returns The found status list.
+   */
   async getStatusListById(userId: number, statusListId: number) {
     await this.validationService.checkForStatusListUser(userId, statusListId);
     return await this.prismaService.statusList.findUnique({
@@ -27,6 +33,12 @@ export class StatusListService {
     });
   }
 
+  /**
+   * Get all the status lists of a board.
+   * @param userId Session user id.
+   * @param boardId Board's id.
+   * @returns All the status lists of the board.
+   */
   async getStatusListsOfBoard(userId: number, boardId: number) {
     await this.validationService.checkForBoardUser(userId, boardId);
     return await this.prismaService.statusList.findMany({
@@ -36,6 +48,12 @@ export class StatusListService {
     });
   }
 
+  /**
+   * Creates a board's status list in the database.
+   * @param userId Session user id.
+   * @param dto Data from controller.
+   * @returns The newly created status list.
+   */
   async createStatusList(userId: number, dto: CreateStatusListDto) {
     await this.validationService.checkForBoardUser(userId, dto.boardId);
     return await this.prismaService.statusList.create({
@@ -45,6 +63,12 @@ export class StatusListService {
     });
   }
 
+  /**
+   * Deletes a status list by its id.
+   * @param userId Session user id.
+   * @param statusListId Status list's id.
+   * @returns Nothing.
+   */
   async deleteStatusListById(userId: number, statusListId: number) {
     await this.validationService.checkForBoardUser(userId, statusListId);
     return await this.prismaService.statusList.delete({
@@ -54,6 +78,13 @@ export class StatusListService {
     });
   }
 
+  /**
+   * Edits a status list by its id.
+   * @param userId Session user id.
+   * @param statusListId Status list's id.
+   * @param dto Data from controller.
+   * @returns The just edited status list.
+   */
   async editStatusListById(userId: number, statusListId: number, dto: EditStatusListDto) {
     await this.validationService.checkForStatusListUser(userId, statusListId);
     return await this.prismaService.statusList.update({

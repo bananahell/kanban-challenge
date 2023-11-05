@@ -1,3 +1,6 @@
+/**
+ * All error messages passed as exception arguments in the project.
+ */
 export enum ErrorMessages {
   AuthCredentialsTaken = 'Credentials taken!',
   AuthEmailNotFound = 'Email not found in database!',

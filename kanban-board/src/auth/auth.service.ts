@@ -16,9 +16,9 @@ export class AuthService {
   ) {}
 
   /**
-   * Gets data from controller to save into db. Uses argon2 to make a password hash.
+   * Gets data from controller to save into database. Uses argon2 to make a password hash.
    * @param dto Data from controller.
-   * @returns The newly created user without the password hash (of course, duh).
+   * @returns The newly created user without the password hash.
    */
   async signUp(dto: AuthDto) {
     const hash = await argon2.hash(dto.password);
@@ -43,7 +43,7 @@ export class AuthService {
   /**
    * Checks user data from controller to get JWT token for sign in.
    * @param dto Data from controller.
-   * @returns A JWT token for the user to use in the /users/me route.
+   * @returns A JWT token for the user to use in the bearer authorization header field.
    */
   async signIn(dto: AuthDto) {
     const user = await this.prismaService.user.findUnique({
@@ -61,6 +61,12 @@ export class AuthService {
     return await this.signToken(user.id, user.email);
   }
 
+  /**
+   * Generates a JWT access token to be used by the user in the bearer authorization header field.
+   * @param userId Session user id.
+   * @param email User's email used to generate access token.
+   * @returns A 30 minute JWT access token.
+   */
   async signToken(userId: number, email: string): Promise<{ access_token: string }> {
     const payload = {
       sub: userId,

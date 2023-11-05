@@ -10,6 +10,12 @@ export class AttachmentService {
     private validationService: ValidationService,
   ) {}
 
+  /**
+   * Get all attachments of a card.
+   * @param userId Session user id.
+   * @param cardId Id of card holder of the attachments.
+   * @returns All attachments of a card.
+   */
   async getAttachmentsByCard(userId: number, cardId: number) {
     await this.validationService.checkForCardUser(userId, cardId);
     return await this.prismaService.attachment.findMany({
@@ -19,6 +25,12 @@ export class AttachmentService {
     });
   }
 
+  /**
+   * Gets one attachment by id.
+   * @param userId Session user id.
+   * @param attachemntId Id of the attachment to be searched.
+   * @returns Attachment found.
+   */
   async getAttachmentById(userId: number, attachemntId: number) {
     await this.validationService.checkForAttachmentUser(userId, attachemntId);
     return await this.prismaService.attachment.findUnique({
@@ -28,6 +40,12 @@ export class AttachmentService {
     });
   }
 
+  /**
+   * Creates a card's attachment in the database.
+   * @param userId Session user id.
+   * @param dto Data from controller.
+   * @returns Newly created attachment.
+   */
   async createAttachment(userId: number, dto: CreateAttachmentDto) {
     await this.validationService.checkForCardUser(userId, dto.cardId);
     return await this.prismaService.attachment.create({
@@ -37,6 +55,12 @@ export class AttachmentService {
     });
   }
 
+  /**
+   * Deletes a card's attachment from the database.
+   * @param userId Session user id.
+   * @param attachemntId Id of the attachment to be deleted.
+   * @returns Nothing.
+   */
   async deleteAttachmentById(userId: number, attachemntId: number) {
     await this.validationService.checkForAttachmentUser(userId, attachemntId);
     return await this.prismaService.attachment.delete({
@@ -46,6 +70,13 @@ export class AttachmentService {
     });
   }
 
+  /**
+   * Edits a card's attachment in the database.
+   * @param userId Session user id.
+   * @param attachemntId Id of the attachment to be edited.
+   * @param dto Data from the controller.
+   * @returns The just edited attachment.
+   */
   async editAttachmentById(userId: number, attachemntId: number, dto: EditAttachmentDto) {
     await this.validationService.checkForAttachmentUser(userId, attachemntId);
     return await this.prismaService.attachment.update({

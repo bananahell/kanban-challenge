@@ -14,6 +14,10 @@ export class PrismaService extends PrismaClient {
     });
   }
 
+  /**
+   * Deletes all of the database's entries. Used in the e2e testing suite.
+   * @returns Nothing.
+   */
   async cleanDb() {
     return await this.$transaction([
       this.tag.deleteMany(),

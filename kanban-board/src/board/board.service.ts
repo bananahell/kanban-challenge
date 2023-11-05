@@ -10,6 +10,11 @@ export class BoardService {
     private validationService: ValidationService,
   ) {}
 
+  /**
+   * Get all boards visible to user.
+   * @param userId Session user id.
+   * @returns All boards visible to the user.
+   */
   async getBoards(userId: number) {
     return await this.prismaService.board.findMany({
       where: {
@@ -22,6 +27,12 @@ export class BoardService {
     });
   }
 
+  /**
+   * Get one board by its id.
+   * @param userId Session user id.
+   * @param boardId Board's id.
+   * @returns The board searched.
+   */
   async getBoardById(userId: number, boardId: number) {
     await this.validationService.checkForBoardUser(userId, boardId);
     return await this.prismaService.board.findFirst({
@@ -31,6 +42,12 @@ export class BoardService {
     });
   }
 
+  /**
+   * Creates a board in the database.
+   * @param userId Session user id.
+   * @param dto Data from controller.
+   * @returns The newly created board.
+   */
   async createBoard(userId: number, dto: CreateBoardDto) {
     const board = await this.prismaService.board.create({
       data: {
@@ -41,6 +58,13 @@ export class BoardService {
     return await this.addBoardUser(userId, { userId: userId, boardId: board.id });
   }
 
+  /**
+   * Edits a board in the database.
+   * @param userId Session user id.
+   * @param boardId Board's id.
+   * @param dto Data from controller.
+   * @returns The just edited board.
+   */
   async editBoardById(userId: number, boardId: number, dto: EditBoardDto) {
     await this.validationService.checkForBoardOwner(userId, boardId);
     return await this.prismaService.board.update({
@@ -53,6 +77,12 @@ export class BoardService {
     });
   }
 
+  /**
+   * Deletes a board from the database.
+   * @param userId Session user id.
+   * @param boardId Board's id.
+   * @returns Nothing.
+   */
   async deleteBoardById(userId: number, boardId: number) {
     await this.validationService.checkForBoardOwner(userId, boardId);
     return await this.prismaService.board.delete({
@@ -62,6 +92,12 @@ export class BoardService {
     });
   }
 
+  /**
+   * Adds a user to a board's user array.
+   * @param userId Session user id.
+   * @param dto Data from controller.
+   * @returns The board updated with the new user.
+   */
   async addBoardUser(userId: number, dto: ManageBoardUserDto) {
     await this.validationService.checkForBoardOwner(userId, dto.boardId);
     return await this.prismaService.board.update({
@@ -78,6 +114,12 @@ export class BoardService {
     });
   }
 
+  /**
+   * Removes a user from a board's user array.
+   * @param userId Session user id.
+   * @param dto Data from controller.
+   * @returns The board updated without the deleted user.
+   */
   async removeBoardUser(userId: number, dto: ManageBoardUserDto) {
     this.validationService.checkRemoveBoardOwner(userId, dto);
     await this.validationService.checkForBoardOwner(userId, dto.boardId);
@@ -101,6 +143,12 @@ export class BoardService {
     });
   }
 
+  /**
+   * Grants ownership of a board to a user.
+   * @param userId Session user id.
+   * @param dto Data from controller.
+   * @returns The board with its updated owner.
+   */
   async passOwnership(userId: number, dto: ManageBoardUserDto) {
     const board = await this.validationService.checkForBoardOwner(userId, dto.boardId);
     this.validationService.checkPassBoardOwnerToBoardOwner(board.ownerId, dto);

@@ -10,6 +10,11 @@ export class CommentService {
     private validationService: ValidationService,
   ) {}
 
+  /**
+   * Gets all the comments made by the session's user.
+   * @param userId Session user id.
+   * @returns All comments made by the user.
+   */
   async getUserComments(userId: number) {
     return await this.prismaService.comment.findMany({
       where: {
@@ -18,6 +23,12 @@ export class CommentService {
     });
   }
 
+  /**
+   * Get every comment inside a card.
+   * @param userId Session user id.
+   * @param cardId Card's id.
+   * @returns All comments made in a card.
+   */
   async getCardComments(userId: number, cardId: number) {
     await this.validationService.checkForCardUser(userId, cardId);
     return await this.prismaService.comment.findMany({
@@ -27,6 +38,12 @@ export class CommentService {
     });
   }
 
+  /**
+   * Gets a comment by its id.
+   * @param userId Session user id.
+   * @param commentId Comment's id.
+   * @returns The comment found.
+   */
   async getCommentById(userId: number, commentId: number) {
     await this.validationService.checkForCommentUser(userId, commentId);
     return await this.prismaService.comment.findUnique({
@@ -36,6 +53,12 @@ export class CommentService {
     });
   }
 
+  /**
+   * Creates a comment in a card under the session user's name.
+   * @param userId Session user id.
+   * @param dto Data from controller.
+   * @returns The newly created comment.
+   */
   async createComment(userId: number, dto: CreateCommentDto) {
     await this.validationService.checkForCardUser(userId, dto.cardId);
     return await this.prismaService.comment.create({
@@ -46,6 +69,12 @@ export class CommentService {
     });
   }
 
+  /**
+   * Deletes a comment by its id.
+   * @param userId Session user id.
+   * @param commentId Comment's id.
+   * @returns Nothing.
+   */
   async deleteCommentById(userId: number, commentId: number) {
     await this.validationService.checkForCommentOwner(userId, commentId);
     return await this.prismaService.comment.delete({
@@ -55,6 +84,13 @@ export class CommentService {
     });
   }
 
+  /**
+   * Edit's a comment by its id.
+   * @param userId Session user id.
+   * @param commentId Comment's id.
+   * @param dto Data from controller.
+   * @returns The just added comment.
+   */
   async editCommentById(userId: number, commentId: number, dto: EditCommentDto) {
     await this.validationService.checkForCommentOwner(userId, commentId);
     return await this.prismaService.comment.update({

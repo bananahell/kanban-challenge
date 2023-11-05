@@ -1,5 +1,8 @@
 import { ExecutionContext, createParamDecorator } from '@nestjs/common';
 
+/**
+ * Decorator for getting a session's express request user.
+ */
 export const GetUser = createParamDecorator((data: string | undefined, ctx: ExecutionContext) => {
   const request: Express.Request = ctx.switchToHttp().getRequest();
   if (data) {

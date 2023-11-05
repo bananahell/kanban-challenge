@@ -11,6 +11,9 @@ import { CreateTagDto } from '../src/tag/dto';
 describe('App e2e', () => {
   let app: INestApplication;
   let prisma: PrismaService;
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Setting all of test suite and cleaning database before testing
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
       imports: [AppModule],
@@ -27,9 +30,14 @@ describe('App e2e', () => {
     await prisma.cleanDb();
     pactum.request.setBaseUrl('http://localhost:3334');
   });
+
   afterAll(() => {
     app.close();
   });
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Creates 3 users, edits the second, and gets all 3 to get their JWT tokens
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   const dtoUser1: AuthDto = {
     name: 'Nhe',
     email: 'teste@gmail.com',
@@ -109,6 +117,11 @@ describe('App e2e', () => {
         .stores('userId3', 'id');
     });
   });
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Creates board 1 and 3 with owner as user 1, board 2 with owner as user 2, edits second board,
+  //   and adds user 3 to boards 1 and 2
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   const dtoBoard1: CreateBoardDto = {
     title: 'Very Large Guy Industries Kanban Board',
     background: '../../assets/very-cool-background.png',
@@ -187,6 +200,10 @@ describe('App e2e', () => {
         .expectStatus(HttpStatus.OK);
     });
   });
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Creates 2 tags
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   const dtoTagImportant: CreateTagDto = {
     name: 'IMPORTANT',
   };
@@ -215,6 +232,10 @@ describe('App e2e', () => {
         .stores('tagId2', 'id');
     });
   });
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Creates a "To do" and a "Done" status list to each of the 3 boards
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   let dtoBoard1ToDo: { name: any; position: any; boardId?: string };
   let dtoBoard1Done: { name: any; position: any; boardId?: string };
   let dtoBoard2ToDo: { name: any; position: any; boardId?: string };
@@ -295,6 +316,10 @@ describe('App e2e', () => {
         .stores('statusListId6', 'id');
     });
   });
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Creates 4 cards for board 1, 2 cards for board 2, and 3 cards for board 3
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   let dtoCard1: {
     title: any;
     description?: string;
@@ -505,6 +530,10 @@ describe('App e2e', () => {
         .stores('cardId9', 'id');
     });
   });
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Creates a comment in card 3 and another in card 5
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   const dtoComment1 = {
     message: 'This should do the trick, right? I really want this job =/',
     cardId: '$S{cardId3}',
@@ -535,6 +564,10 @@ describe('App e2e', () => {
         .stores('commentId2', 'id');
     });
   });
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Creates an attachment in card 3 and another in card 8
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   const dtoAttachment1 = { content: '../docs/back-end-job.pdf', cardId: '$S{cardId3}' };
   const dtoAttachment2 = { content: '../failed-tests/bad-lecture.xls', cardId: '$S{cardId8}' };
   describe('Create attachments', () => {
@@ -559,6 +592,10 @@ describe('App e2e', () => {
         .stores('attachmentId2', 'id');
     });
   });
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Creates a checklist for card 1 and another for card 7
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   const dtoChecklist1 = { title: 'To do before the 9th', cardId: '$S{cardId1}' };
   const dtoChecklist2 = { title: 'Point cloud requirements', cardId: '$S{cardId7}' };
   describe('Create checklists', () => {
@@ -583,6 +620,10 @@ describe('App e2e', () => {
         .stores('checklistId2', 'id');
     });
   });
+
+  //////////////////////////////////////////////////////////////////////////////////////////////////
+  // Creates 1 item for checklist 1 and 2 items for checklist 2
+  //////////////////////////////////////////////////////////////////////////////////////////////////
   const dtoChecklistItem1 = {
     description: 'Finish the damn thing',
     checklistId: '$S{checklistId1}',
