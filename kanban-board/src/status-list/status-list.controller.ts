@@ -22,38 +22,41 @@ export class StatusListController {
   constructor(private statusListService: StatusListService) {}
 
   @Get('board/:id')
-  getStatusListsOfBoard(@GetUser('id') userId: number, @Param('id', ParseIntPipe) boardId: number) {
-    this.statusListService.getStatusListsOfBoard(userId, boardId);
+  async getStatusListsOfBoard(
+    @GetUser('id') userId: number,
+    @Param('id', ParseIntPipe) boardId: number,
+  ) {
+    return await this.statusListService.getStatusListsOfBoard(userId, boardId);
   }
 
   @Get(':id')
-  getStatusListById(
+  async getStatusListById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) statusListId: number,
   ) {
-    this.statusListService.getStatusListById(userId, statusListId);
+    return await this.statusListService.getStatusListById(userId, statusListId);
   }
 
   @Post()
-  createStatusList(@GetUser('id') userId: number, @Body() dto: CreateStatusListDto) {
-    return this.statusListService.createStatusList(userId, dto);
+  async createStatusList(@GetUser('id') userId: number, @Body() dto: CreateStatusListDto) {
+    return await this.statusListService.createStatusList(userId, dto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  deleteStatusListById(
+  async deleteStatusListById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) statusListId: number,
   ) {
-    return this.statusListService.deleteStatusListById(userId, statusListId);
+    return await this.statusListService.deleteStatusListById(userId, statusListId);
   }
 
   @Patch(':id')
-  editStatusListById(
+  async editStatusListById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) statusListId: number,
     @Body() dto: EditStatusListDto,
   ) {
-    this.statusListService.editStatusListById(userId, statusListId, dto);
+    return await this.statusListService.editStatusListById(userId, statusListId, dto);
   }
 }

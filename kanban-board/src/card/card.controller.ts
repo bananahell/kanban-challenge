@@ -1,8 +1,20 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { JwtGuard } from '../auth/guard';
 import { CardService } from './card.service';
 import { GetUser } from '../auth/decorator';
-import { CreateCardDto } from './dto';
+import { CreateCardDto, EditCardDto, ManageCardUserDto } from './dto';
 
 @UseGuards(JwtGuard)
 @Controller('cards')
@@ -10,30 +22,55 @@ export class CardController {
   constructor(private cardService: CardService) {}
 
   @Get()
-  getCardsByUser(@GetUser('id') userId: number) {
-    return this.cardService.getCardsByUser(userId);
+  async getCardsByUser(@GetUser('id') userId: number) {
+    return await this.cardService.getCardsByUser(userId);
   }
 
   @Get('statusList/:id')
-  getCardsOfStatusList(
+  async getCardsOfStatusList(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) statusListId: number,
   ) {
-    return this.cardService.getCardsOfStatusList(userId, statusListId);
+    return await this.cardService.getCardsOfStatusList(userId, statusListId);
   }
 
   @Get('board/:id')
-  getCardsOfBoard(@GetUser('id') userId: number, @Param('id', ParseIntPipe) boardId: number) {
-    return this.cardService.getCardsOfBoard(userId, boardId);
+  async getCardsOfBoard(@GetUser('id') userId: number, @Param('id', ParseIntPipe) boardId: number) {
+    return await this.cardService.getCardsOfBoard(userId, boardId);
   }
 
   @Get(':id')
-  getCardById(@GetUser('id') userId: number, @Param('id', ParseIntPipe) cardId: number) {
-    return this.cardService.getCardById(userId, cardId);
+  async getCardById(@GetUser('id') userId: number, @Param('id', ParseIntPipe) cardId: number) {
+    return await this.cardService.getCardById(userId, cardId);
   }
 
   @Post()
-  createCard(@GetUser('id') userId: number, @Body() dto: CreateCardDto) {
-    this.cardService.createCard(userId, dto);
+  async createCard(@GetUser('id') userId: number, @Body() dto: CreateCardDto) {
+    return await this.cardService.createCard(userId, dto);
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':id')
+  async deleteCardById(@GetUser('id') userId: number, @Param('id', ParseIntPipe) cardId: number) {
+    return await this.cardService.deleteCardById(userId, cardId);
+  }
+
+  @Patch('add-user')
+  async addCardUser(@GetUser('id') userId: number, @Body() dto: ManageCardUserDto) {
+    return await this.cardService.addCardUser(userId, dto);
+  }
+
+  @Patch('remove-user')
+  async removeCardUser(@GetUser('id') userId: number, @Body() dto: ManageCardUserDto) {
+    return await this.cardService.removeCardUser(userId, dto);
+  }
+
+  @Patch(':id')
+  async editCardById(
+    @GetUser('id') userId: number,
+    @Param('id', ParseIntPipe) cardId: number,
+    @Body() dto: EditCardDto,
+  ) {
+    return await this.cardService.editCardById(userId, cardId, dto);
   }
 }

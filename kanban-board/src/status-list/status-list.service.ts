@@ -11,9 +11,9 @@ export class StatusListService {
     private validationService: ValidationService,
   ) {}
 
-  getStatusListById(userId: number, statusListId: number) {
-    this.validationService.checkForStatusListUser(userId, statusListId);
-    return this.prismaService.statusList.findUnique({
+  async getStatusListById(userId: number, statusListId: number) {
+    await this.validationService.checkForStatusListUser(userId, statusListId);
+    return await this.prismaService.statusList.findUnique({
       where: {
         id: statusListId,
         board: {
@@ -28,8 +28,8 @@ export class StatusListService {
   }
 
   async getStatusListsOfBoard(userId: number, boardId: number) {
-    this.validationService.checkForBoardUser(userId, boardId);
-    return this.prismaService.statusList.findMany({
+    await this.validationService.checkForBoardUser(userId, boardId);
+    return await this.prismaService.statusList.findMany({
       where: {
         boardId: boardId,
       },
@@ -37,8 +37,8 @@ export class StatusListService {
   }
 
   async createStatusList(userId: number, dto: CreateStatusListDto) {
-    this.validationService.checkForBoardUser(userId, dto.boardId);
-    return this.prismaService.statusList.create({
+    await this.validationService.checkForBoardUser(userId, dto.boardId);
+    return await this.prismaService.statusList.create({
       data: {
         ...dto,
       },
@@ -46,8 +46,8 @@ export class StatusListService {
   }
 
   async deleteStatusListById(userId: number, statusListId: number) {
-    this.validationService.checkForBoardUser(userId, statusListId).catch();
-    return this.prismaService.statusList.delete({
+    await this.validationService.checkForBoardUser(userId, statusListId);
+    return await this.prismaService.statusList.delete({
       where: {
         id: statusListId,
       },
@@ -55,8 +55,8 @@ export class StatusListService {
   }
 
   async editStatusListById(userId: number, statusListId: number, dto: EditStatusListDto) {
-    this.validationService.checkForStatusListUser(userId, statusListId);
-    return this.prismaService.statusList.update({
+    await this.validationService.checkForStatusListUser(userId, statusListId);
+    return await this.prismaService.statusList.update({
       where: {
         id: statusListId,
       },

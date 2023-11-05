@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class AddUserDto {
+export class ManageBoardUserDto {
   @IsNumber()
   @IsNotEmpty()
   boardId: number;

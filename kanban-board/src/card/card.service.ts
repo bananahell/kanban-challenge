@@ -1,8 +1,7 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ValidationService } from '../validation.service';
-import { CreateCardDto } from './dto';
-import { ErrorMessages } from '../error-msgs';
+import { CreateCardDto, EditCardDto, ManageCardUserDto } from './dto';
 
 @Injectable()
 export class CardService {
@@ -11,8 +10,8 @@ export class CardService {
     private validationService: ValidationService,
   ) {}
 
-  getCardsByUser(userId: number) {
-    return this.prismaService.card.findMany({
+  async getCardsByUser(userId: number) {
+    return await this.prismaService.card.findMany({
       where: {
         users: {
           some: {
@@ -24,22 +23,8 @@ export class CardService {
   }
 
   async getCardsOfStatusList(userId: number, statusListId: number) {
-    const statusList = await this.prismaService.statusList.findUnique({
-      where: {
-        id: statusListId,
-        board: {
-          users: {
-            some: {
-              id: userId,
-            },
-          },
-        },
-      },
-    });
-    if (!statusList) {
-      throw new ForbiddenException(ErrorMessages.UserNotInBoard);
-    }
-    return this.prismaService.card.findMany({
+    await this.validationService.checkForStatusListUser(userId, statusListId);
+    return await this.prismaService.card.findMany({
       where: {
         statusListId: statusListId,
       },
@@ -47,20 +32,8 @@ export class CardService {
   }
 
   async getCardsOfBoard(userId: number, boardId: number) {
-    const board = await this.prismaService.board.findUnique({
-      where: {
-        id: boardId,
-        users: {
-          some: {
-            id: userId,
-          },
-        },
-      },
-    });
-    if (!board) {
-      throw new ForbiddenException(ErrorMessages.UserNotInBoard);
-    }
-    return this.prismaService.card.findMany({
+    await this.validationService.checkForBoardUser(userId, boardId);
+    return await this.prismaService.card.findMany({
       where: {
         statusList: {
           boardId: boardId,
@@ -69,31 +42,77 @@ export class CardService {
     });
   }
 
-  getCardById(userId: number, cardId: number) {
-    this.prismaService.card.findUnique({
+  async getCardById(userId: number, cardId: number) {
+    await this.validationService.checkForCardUser(userId, cardId);
+    return await this.prismaService.card.findUnique({
       where: {
         id: cardId,
-        statusList: {
-          board: {
-            users: {
-              some: {
-                id: userId,
-              },
-            },
+      },
+    });
+  }
+
+  async createCard(userId: number, dto: CreateCardDto) {
+    await this.validationService.checkForStatusListUser(userId, dto.statusListId);
+    return await this.prismaService.card.create({
+      data: {
+        ...dto,
+      },
+    });
+  }
+
+  async deleteCardById(userId: number, cardId: number) {
+    await this.validationService.checkForCardUser(userId, cardId);
+    return await this.prismaService.card.delete({
+      where: {
+        id: cardId,
+      },
+    });
+  }
+
+  async addCardUser(userId: number, dto: ManageCardUserDto) {
+    await this.validationService.checkForCardUser(userId, dto.cardId);
+    return await this.prismaService.card.update({
+      where: {
+        id: dto.cardId,
+      },
+      data: {
+        users: {
+          connect: {
+            id: dto.userId,
           },
         },
       },
     });
   }
 
-  async createCard(userId: number, dto: CreateCardDto) {
-    const statusList = await this.prismaService.statusList.findUnique({
+  async removeCardUser(userId: number, dto: ManageCardUserDto) {
+    await this.validationService.checkForCardUser(userId, dto.cardId);
+    const cardUsers = await this.prismaService.card.findUnique({
       where: {
-        id: dto.statusListId,
+        id: dto.cardId,
+      },
+      select: {
+        users: true,
       },
     });
-    this.validationService.checkForBoardUser(userId, statusList.boardId).catch();
-    return this.prismaService.card.create({
+    return await this.prismaService.card.update({
+      where: {
+        id: dto.cardId,
+      },
+      data: {
+        users: {
+          set: cardUsers.users.filter((u) => u.id !== dto.userId),
+        },
+      },
+    });
+  }
+
+  async editCardById(userId: number, cardId: number, dto: EditCardDto) {
+    await this.validationService.checkForCardUser(userId, cardId);
+    return await this.prismaService.card.update({
+      where: {
+        id: cardId,
+      },
       data: {
         ...dto,
       },

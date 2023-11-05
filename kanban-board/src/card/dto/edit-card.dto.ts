@@ -1,9 +1,9 @@
-import { IsDateString, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsDateString, IsNumber, IsOptional, IsString } from 'class-validator';
 
-export class CreateCardDto {
+export class EditCardDto {
   @IsString()
-  @IsNotEmpty()
-  title: string;
+  @IsOptional()
+  title?: string;
 
   @IsString()
   @IsOptional()
@@ -18,8 +18,8 @@ export class CreateCardDto {
   endDate?: Date;
 
   @IsNumber()
-  @IsNotEmpty()
-  statusListId: number;
+  @IsOptional()
+  statusListId?: number;
 
   @IsNumber()
   @IsOptional()

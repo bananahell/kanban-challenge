@@ -1,7 +1,6 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { AddUserDto, CreateBoardDto, EditBoardDto } from './dto';
-import { ErrorMessages } from '../error-msgs';
+import { ManageBoardUserDto, CreateBoardDto, EditBoardDto } from './dto';
 import { ValidationService } from '../validation.service';
 
 @Injectable()
@@ -11,8 +10,8 @@ export class BoardService {
     private validationService: ValidationService,
   ) {}
 
-  getBoards(userId: number) {
-    return this.prismaService.board.findMany({
+  async getBoards(userId: number) {
+    return await this.prismaService.board.findMany({
       where: {
         users: {
           some: {
@@ -23,15 +22,11 @@ export class BoardService {
     });
   }
 
-  getBoardById(userId: number, boardId: number) {
-    return this.prismaService.board.findFirst({
+  async getBoardById(userId: number, boardId: number) {
+    await this.validationService.checkForBoardUser(userId, boardId);
+    return await this.prismaService.board.findFirst({
       where: {
         id: boardId,
-        users: {
-          some: {
-            id: userId,
-          },
-        },
       },
     });
   }
@@ -43,12 +38,12 @@ export class BoardService {
         ...dto,
       },
     });
-    return this.addBoardUser(userId, { userId: userId, boardId: board.id });
+    return await this.addBoardUser(userId, { userId: userId, boardId: board.id });
   }
 
   async editBoardById(userId: number, boardId: number, dto: EditBoardDto) {
-    this.validationService.checkForBoardOwner(userId, boardId).catch();
-    return this.prismaService.board.update({
+    await this.validationService.checkForBoardOwner(userId, boardId);
+    return await this.prismaService.board.update({
       where: {
         id: boardId,
       },
@@ -59,17 +54,17 @@ export class BoardService {
   }
 
   async deleteBoardById(userId: number, boardId: number) {
-    this.validationService.checkForBoardOwner(userId, boardId).catch();
-    await this.prismaService.board.delete({
+    await this.validationService.checkForBoardOwner(userId, boardId);
+    return await this.prismaService.board.delete({
       where: {
         id: boardId,
       },
     });
   }
 
-  async addBoardUser(userId: number, dto: AddUserDto) {
-    this.validationService.checkForBoardOwner(userId, dto.boardId).catch();
-    return this.prismaService.board.update({
+  async addBoardUser(userId: number, dto: ManageBoardUserDto) {
+    await this.validationService.checkForBoardOwner(userId, dto.boardId);
+    return await this.prismaService.board.update({
       where: {
         id: dto.boardId,
       },
@@ -83,11 +78,9 @@ export class BoardService {
     });
   }
 
-  async removeBoardUser(userId: number, dto: AddUserDto) {
-    if (userId === dto.userId) {
-      throw new ForbiddenException(ErrorMessages.CantRemoveOwnerUser);
-    }
-    this.validationService.checkForBoardOwner(userId, dto.boardId).catch();
+  async removeBoardUser(userId: number, dto: ManageBoardUserDto) {
+    this.validationService.checkRemoveBoardOwner(userId, dto);
+    await this.validationService.checkForBoardOwner(userId, dto.boardId);
     const boardUsers = await this.prismaService.board.findUnique({
       where: {
         id: dto.boardId,
@@ -96,7 +89,7 @@ export class BoardService {
         users: true,
       },
     });
-    return this.prismaService.board.update({
+    return await this.prismaService.board.update({
       where: {
         id: dto.boardId,
       },
@@ -108,11 +101,9 @@ export class BoardService {
     });
   }
 
-  async passOwnership(userId: number, dto: AddUserDto) {
-    const board = await this.validationService.checkForBoardOwner(userId, dto.boardId).catch();
-    if (board.ownerId === dto.userId) {
-      throw new ForbiddenException(ErrorMessages.CantPassOwnerToOwner);
-    }
+  async passOwnership(userId: number, dto: ManageBoardUserDto) {
+    const board = await this.validationService.checkForBoardOwner(userId, dto.boardId);
+    this.validationService.checkPassBoardOwnerToBoardOwner(board.ownerId, dto);
     this.addBoardUser(userId, dto);
     return await this.prismaService.board.update({
       where: {

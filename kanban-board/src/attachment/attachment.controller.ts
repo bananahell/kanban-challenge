@@ -41,19 +41,19 @@ export class AttachmentController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  deleteAttachmentById(
+  async deleteAttachmentById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) attachmentId: number,
   ) {
-    return this.attachmentService.deleteAttachmentById(userId, attachmentId);
+    return await this.attachmentService.deleteAttachmentById(userId, attachmentId);
   }
 
   @Patch(':id')
-  editAttachmentById(
+  async editAttachmentById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) attachmentId: number,
     @Body() dto: EditAttachmentDto,
   ) {
-    return this.attachmentService.editAttachmentById(userId, attachmentId, dto);
+    return await this.attachmentService.editAttachmentById(userId, attachmentId, dto);
   }
 }

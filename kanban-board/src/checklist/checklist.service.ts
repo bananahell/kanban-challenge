@@ -11,8 +11,8 @@ export class ChecklistService {
   ) {}
 
   async getChecklistsByCard(userId: number, cardId: number) {
-    this.validationService.checkForCardUser(userId, cardId);
-    return this.prismaService.checklist.findMany({
+    await this.validationService.checkForCardUser(userId, cardId);
+    return await this.prismaService.checklist.findMany({
       where: {
         cardId: cardId,
       },
@@ -20,8 +20,8 @@ export class ChecklistService {
   }
 
   async getChecklistById(userId: number, checklistId: number) {
-    this.validationService.checkForChecklistUser(userId, checklistId);
-    return this.prismaService.checklist.findUnique({
+    await this.validationService.checkForChecklistUser(userId, checklistId);
+    return await this.prismaService.checklist.findUnique({
       where: {
         id: checklistId,
       },
@@ -29,8 +29,8 @@ export class ChecklistService {
   }
 
   async createChecklist(userId: number, dto: CreateChecklistDto) {
-    this.validationService.checkForCardUser(userId, dto.cardId);
-    return this.prismaService.checklist.create({
+    await this.validationService.checkForCardUser(userId, dto.cardId);
+    return await this.prismaService.checklist.create({
       data: {
         ...dto,
       },
@@ -38,8 +38,8 @@ export class ChecklistService {
   }
 
   async deleteChecklistById(userId: number, checklistId: number) {
-    this.validationService.checkForChecklistUser(userId, checklistId);
-    return this.prismaService.checklist.delete({
+    await this.validationService.checkForChecklistUser(userId, checklistId);
+    return await this.prismaService.checklist.delete({
       where: {
         id: checklistId,
       },
@@ -47,8 +47,8 @@ export class ChecklistService {
   }
 
   async editChecklistById(userId: number, checklistId: number, dto: EditChecklistDto) {
-    this.validationService.checkForChecklistUser(userId, checklistId);
-    return this.prismaService.checklist.update({
+    await this.validationService.checkForChecklistUser(userId, checklistId);
+    return await this.prismaService.checklist.update({
       where: {
         id: checklistId,
       },

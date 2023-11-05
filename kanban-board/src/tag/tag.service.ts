@@ -6,12 +6,12 @@ import { CreateTagDto, EditTagDto } from './dto';
 export class TagService {
   constructor(private prismaService: PrismaService) {}
 
-  getTags() {
-    return this.prismaService.tag.findMany();
+  async getTags() {
+    return await this.prismaService.tag.findMany();
   }
 
-  getTagById(tagId: number) {
-    return this.prismaService.tag.findUnique({
+  async getTagById(tagId: number) {
+    return await this.prismaService.tag.findUnique({
       where: {
         id: tagId,
       },
@@ -19,7 +19,7 @@ export class TagService {
   }
 
   async createTag(dto: CreateTagDto) {
-    return this.prismaService.tag.create({
+    return await this.prismaService.tag.create({
       data: {
         ...dto,
       },
@@ -27,7 +27,7 @@ export class TagService {
   }
 
   async deleteTagById(tagId: number) {
-    return this.prismaService.tag.delete({
+    return await this.prismaService.tag.delete({
       where: {
         id: tagId,
       },
@@ -35,7 +35,7 @@ export class TagService {
   }
 
   async editTagById(tagId: number, dto: EditTagDto) {
-    return this.prismaService.tag.update({
+    return await this.prismaService.tag.update({
       where: {
         id: tagId,
       },

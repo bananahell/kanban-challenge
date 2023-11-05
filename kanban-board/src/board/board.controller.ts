@@ -14,7 +14,7 @@ import {
 import { GetUser } from '../auth/decorator';
 import { BoardService } from './board.service';
 import { JwtGuard } from '../auth/guard';
-import { AddUserDto, CreateBoardDto, EditBoardDto } from './dto';
+import { ManageBoardUserDto, CreateBoardDto, EditBoardDto } from './dto';
 
 @UseGuards(JwtGuard)
 @Controller('boards')
@@ -38,31 +38,31 @@ export class BoardController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  deleteBoardById(@GetUser('id') userId: number, @Param('id', ParseIntPipe) boardId: number) {
-    return this.boardService.deleteBoardById(userId, boardId);
+  async deleteBoardById(@GetUser('id') userId: number, @Param('id', ParseIntPipe) boardId: number) {
+    return await this.boardService.deleteBoardById(userId, boardId);
   }
 
   @Patch('add-user')
-  addBoardUser(@GetUser('id') userId: number, @Body() dto: AddUserDto) {
-    return this.boardService.addBoardUser(userId, dto);
+  async addBoardUser(@GetUser('id') userId: number, @Body() dto: ManageBoardUserDto) {
+    return await this.boardService.addBoardUser(userId, dto);
   }
 
   @Patch('remove-user')
-  removeBoardUser(@GetUser('id') userId: number, @Body() dto: AddUserDto) {
-    return this.boardService.removeBoardUser(userId, dto);
+  async removeBoardUser(@GetUser('id') userId: number, @Body() dto: ManageBoardUserDto) {
+    return await this.boardService.removeBoardUser(userId, dto);
   }
 
   @Patch('pass-owner')
-  passOwnership(@GetUser('id') userId: number, @Body() dto: AddUserDto) {
-    return this.boardService.passOwnership(userId, dto);
+  async passOwnership(@GetUser('id') userId: number, @Body() dto: ManageBoardUserDto) {
+    return await this.boardService.passOwnership(userId, dto);
   }
 
   @Patch(':id')
-  editBoardById(
+  async editBoardById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) boardId: number,
     @Body() dto: EditBoardDto,
   ) {
-    return this.boardService.editBoardById(userId, boardId, dto);
+    return await this.boardService.editBoardById(userId, boardId, dto);
   }
 }

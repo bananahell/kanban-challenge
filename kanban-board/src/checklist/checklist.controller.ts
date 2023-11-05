@@ -22,35 +22,41 @@ export class ChecklistController {
   constructor(private checklistService: ChecklistService) {}
 
   @Get('card/:id')
-  getChecklistsByCard(@GetUser('id') userId: number, @Param('id', ParseIntPipe) cardId: number) {
-    return this.checklistService.getChecklistsByCard(userId, cardId);
+  async getChecklistsByCard(
+    @GetUser('id') userId: number,
+    @Param('id', ParseIntPipe) cardId: number,
+  ) {
+    return await this.checklistService.getChecklistsByCard(userId, cardId);
   }
 
   @Get(':id')
-  getChecklistById(@GetUser('id') userId: number, @Param('id', ParseIntPipe) checklistId: number) {
-    return this.checklistService.getChecklistById(userId, checklistId);
+  async getChecklistById(
+    @GetUser('id') userId: number,
+    @Param('id', ParseIntPipe) checklistId: number,
+  ) {
+    return await this.checklistService.getChecklistById(userId, checklistId);
   }
 
   @Post()
-  createChecklist(@GetUser('id') userId: number, @Body() dto: CreateChecklistDto) {
-    return this.checklistService.createChecklist(userId, dto);
+  async createChecklist(@GetUser('id') userId: number, @Body() dto: CreateChecklistDto) {
+    return await this.checklistService.createChecklist(userId, dto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  deleteChecklistById(
+  async deleteChecklistById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) checklistId: number,
   ) {
-    return this.checklistService.deleteChecklistById(userId, checklistId);
+    return await this.checklistService.deleteChecklistById(userId, checklistId);
   }
 
   @Patch(':id')
-  editChecklistById(
+  async editChecklistById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) checklistId: number,
     @Body() dto: EditChecklistDto,
   ) {
-    return this.checklistService.editChecklistById(userId, checklistId, dto);
+    return await this.checklistService.editChecklistById(userId, checklistId, dto);
   }
 }

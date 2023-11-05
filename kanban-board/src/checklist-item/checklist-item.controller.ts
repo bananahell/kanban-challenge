@@ -9,59 +9,62 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { ChecklistItemService } from './checklist-item.service';
 import { GetUser } from '../auth/decorator';
 import { CreateChecklistItemDto, EditChecklistItemDto } from './dto';
+import { JwtGuard } from '../auth/guard';
 
-@Controller('checklist-item')
+@UseGuards(JwtGuard)
+@Controller('checklist-items')
 export class ChecklistItemController {
   constructor(private checklistItemService: ChecklistItemService) {}
 
   @Get('checklist/:id')
-  getChecklistItemsByChecklist(
+  async getChecklistItemsByChecklist(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) checklistId: number,
   ) {
-    this.checklistItemService.getChecklistItemsByChecklist(userId, checklistId);
+    return await this.checklistItemService.getChecklistItemsByChecklist(userId, checklistId);
   }
 
   @Get('card/:id')
-  getChecklistItemsByCard(
+  async getChecklistItemsByCard(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) cardId: number,
   ) {
-    this.checklistItemService.getChecklistItemsByCard(userId, cardId);
+    return await this.checklistItemService.getChecklistItemsByCard(userId, cardId);
   }
 
   @Get(':id')
-  getChecklistItemsById(
+  async getChecklistItemsById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) checklistItemId: number,
   ) {
-    this.checklistItemService.getChecklistItemsById(userId, checklistItemId);
+    return await this.checklistItemService.getChecklistItemsById(userId, checklistItemId);
   }
 
   @Post()
-  createChecklistItem(@GetUser('id') userId: number, @Body() dto: CreateChecklistItemDto) {
-    return this.checklistItemService.createChecklistItem(userId, dto);
+  async createChecklistItem(@GetUser('id') userId: number, @Body() dto: CreateChecklistItemDto) {
+    return await this.checklistItemService.createChecklistItem(userId, dto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  deleteChecklistItemById(
+  async deleteChecklistItemById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) checklistItemId: number,
   ) {
-    return this.checklistItemService.deleteChecklistItemById(userId, checklistItemId);
+    return await this.checklistItemService.deleteChecklistItemById(userId, checklistItemId);
   }
 
   @Patch(':id')
-  editChecklistItemById(
+  async editChecklistItemById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) checklistItemId: number,
     @Body() dto: EditChecklistItemDto,
   ) {
-    return this.checklistItemService.editChecklistItemById(userId, checklistItemId, dto);
+    return await this.checklistItemService.editChecklistItemById(userId, checklistItemId, dto);
   }
 }

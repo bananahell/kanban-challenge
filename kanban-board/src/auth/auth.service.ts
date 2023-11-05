@@ -30,7 +30,7 @@ export class AuthService {
           passHash: hash,
         },
       });
-      return this.signToken(user.id, user.email);
+      return await this.signToken(user.id, user.email);
     } catch (error) {
       // P2002 is the error code for "unique field already exists", in this case the email
       if (error instanceof PrismaClientKnownRequestError && error.code === 'P2002') {
@@ -58,7 +58,7 @@ export class AuthService {
     if (!passwordsMatch) {
       throw new ForbiddenException(ErrorMessages.AuthIncorrectPassword);
     }
-    return this.signToken(user.id, user.email);
+    return await this.signToken(user.id, user.email);
   }
 
   async signToken(userId: number, email: string): Promise<{ access_token: string }> {

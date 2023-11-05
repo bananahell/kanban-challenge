@@ -10,8 +10,8 @@ export class CommentService {
     private validationService: ValidationService,
   ) {}
 
-  getUserComments(userId: number) {
-    return this.prismaService.comment.findMany({
+  async getUserComments(userId: number) {
+    return await this.prismaService.comment.findMany({
       where: {
         userId: userId,
       },
@@ -19,8 +19,8 @@ export class CommentService {
   }
 
   async getCardComments(userId: number, cardId: number) {
-    this.validationService.checkForCardUser(userId, cardId);
-    return this.prismaService.comment.findMany({
+    await this.validationService.checkForCardUser(userId, cardId);
+    return await this.prismaService.comment.findMany({
       where: {
         cardId: cardId,
       },
@@ -28,8 +28,8 @@ export class CommentService {
   }
 
   async getCommentById(userId: number, commentId: number) {
-    this.validationService.checkForCommentUser(userId, commentId);
-    return this.prismaService.comment.findUnique({
+    await this.validationService.checkForCommentUser(userId, commentId);
+    return await this.prismaService.comment.findUnique({
       where: {
         id: commentId,
       },
@@ -37,8 +37,8 @@ export class CommentService {
   }
 
   async createComment(userId: number, dto: CreateCommentDto) {
-    this.validationService.checkForCardUser(userId, dto.cardId);
-    return this.prismaService.comment.create({
+    await this.validationService.checkForCardUser(userId, dto.cardId);
+    return await this.prismaService.comment.create({
       data: {
         userId: userId,
         ...dto,
@@ -47,8 +47,8 @@ export class CommentService {
   }
 
   async deleteCommentById(userId: number, commentId: number) {
-    this.validationService.checkForCommentOwner(userId, commentId);
-    return this.prismaService.comment.delete({
+    await this.validationService.checkForCommentOwner(userId, commentId);
+    return await this.prismaService.comment.delete({
       where: {
         id: commentId,
       },
@@ -56,8 +56,8 @@ export class CommentService {
   }
 
   async editCommentById(userId: number, commentId: number, dto: EditCommentDto) {
-    this.validationService.checkForCommentOwner(userId, commentId);
-    return this.prismaService.comment.update({
+    await this.validationService.checkForCommentOwner(userId, commentId);
+    return await this.prismaService.comment.update({
       where: {
         id: commentId,
         userId: userId,

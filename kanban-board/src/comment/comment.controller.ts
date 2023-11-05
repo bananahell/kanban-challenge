@@ -22,37 +22,43 @@ export class CommentController {
   constructor(private commentService: CommentService) {}
 
   @Get()
-  getUserComments(@GetUser('id') userId: number) {
-    return this.commentService.getUserComments(userId);
+  async getUserComments(@GetUser('id') userId: number) {
+    return await this.commentService.getUserComments(userId);
   }
 
   @Get('card/:id')
-  getCardComments(@GetUser('id') userId: number, @Param('id', ParseIntPipe) cardId: number) {
-    return this.commentService.getCardComments(userId, cardId);
+  async getCardComments(@GetUser('id') userId: number, @Param('id', ParseIntPipe) cardId: number) {
+    return await this.commentService.getCardComments(userId, cardId);
   }
 
   @Get(':id')
-  getCommentById(@GetUser('id') userId: number, @Param('id', ParseIntPipe) commentId: number) {
-    return this.commentService.getCommentById(userId, commentId);
+  async getCommentById(
+    @GetUser('id') userId: number,
+    @Param('id', ParseIntPipe) commentId: number,
+  ) {
+    return await this.commentService.getCommentById(userId, commentId);
   }
 
   @Post()
-  createComment(@GetUser('id') userId: number, @Body() dto: CreateCommentDto) {
-    return this.commentService.createComment(userId, dto);
+  async createComment(@GetUser('id') userId: number, @Body() dto: CreateCommentDto) {
+    return await this.commentService.createComment(userId, dto);
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  deleteCommentById(@GetUser('id') userId: number, @Param('id', ParseIntPipe) commentId: number) {
-    return this.commentService.deleteCommentById(userId, commentId);
+  async deleteCommentById(
+    @GetUser('id') userId: number,
+    @Param('id', ParseIntPipe) commentId: number,
+  ) {
+    return await this.commentService.deleteCommentById(userId, commentId);
   }
 
   @Patch(':id')
-  editCommentById(
+  async editCommentById(
     @GetUser('id') userId: number,
     @Param('id', ParseIntPipe) commentId: number,
     @Body() dto: EditCommentDto,
   ) {
-    return this.commentService.editCommentById(userId, commentId, dto);
+    return await this.commentService.editCommentById(userId, commentId, dto);
   }
 }

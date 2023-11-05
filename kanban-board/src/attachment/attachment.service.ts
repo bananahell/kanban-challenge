@@ -10,18 +10,18 @@ export class AttachmentService {
     private validationService: ValidationService,
   ) {}
 
-  getAttachmentsByCard(userId: number, cardId: number) {
-    this.validationService.checkForCardUser(userId, cardId);
-    return this.prismaService.attachment.findMany({
+  async getAttachmentsByCard(userId: number, cardId: number) {
+    await this.validationService.checkForCardUser(userId, cardId);
+    return await this.prismaService.attachment.findMany({
       where: {
         cardId: cardId,
       },
     });
   }
 
-  getAttachmentById(userId: number, attachemntId: number) {
-    this.validationService.checkForAttachmentUser(userId, attachemntId);
-    return this.prismaService.attachment.findUnique({
+  async getAttachmentById(userId: number, attachemntId: number) {
+    await this.validationService.checkForAttachmentUser(userId, attachemntId);
+    return await this.prismaService.attachment.findUnique({
       where: {
         id: attachemntId,
       },
@@ -29,8 +29,8 @@ export class AttachmentService {
   }
 
   async createAttachment(userId: number, dto: CreateAttachmentDto) {
-    this.validationService.checkForCardUser(userId, dto.cardId);
-    return this.prismaService.attachment.create({
+    await this.validationService.checkForCardUser(userId, dto.cardId);
+    return await this.prismaService.attachment.create({
       data: {
         ...dto,
       },
@@ -38,8 +38,8 @@ export class AttachmentService {
   }
 
   async deleteAttachmentById(userId: number, attachemntId: number) {
-    this.validationService.checkForAttachmentUser(userId, attachemntId);
-    return this.prismaService.attachment.delete({
+    await this.validationService.checkForAttachmentUser(userId, attachemntId);
+    return await this.prismaService.attachment.delete({
       where: {
         id: attachemntId,
       },
@@ -47,8 +47,8 @@ export class AttachmentService {
   }
 
   async editAttachmentById(userId: number, attachemntId: number, dto: EditAttachmentDto) {
-    this.validationService.checkForAttachmentUser(userId, attachemntId);
-    return this.prismaService.attachment.update({
+    await this.validationService.checkForAttachmentUser(userId, attachemntId);
+    return await this.prismaService.attachment.update({
       where: {
         id: attachemntId,
       },

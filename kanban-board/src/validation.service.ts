@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { PrismaService } from './prisma/prisma.service';
 import { ErrorMessages } from './error-msgs';
+import { ManageBoardUserDto } from './board/dto';
 
 @Injectable()
 export class ValidationService {
@@ -36,6 +37,18 @@ export class ValidationService {
       throw new ForbiddenException(ErrorMessages.UserNotInBoard);
     }
     return board;
+  }
+
+  checkRemoveBoardOwner(userId: number, dto: ManageBoardUserDto) {
+    if (userId === dto.userId) {
+      throw new ForbiddenException(ErrorMessages.CantRemoveOwnerUser);
+    }
+  }
+
+  checkPassBoardOwnerToBoardOwner(ownerId: number, dto: ManageBoardUserDto) {
+    if (ownerId === dto.userId) {
+      throw new ForbiddenException(ErrorMessages.CantPassOwnerToOwner);
+    }
   }
 
   async checkForStatusListUser(userId: number, statusListId: number) {

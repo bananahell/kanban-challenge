@@ -19,27 +19,27 @@ export class TagController {
   constructor(private tagService: TagService) {}
 
   @Get()
-  getTags() {
-    this.tagService.getTags();
+  async getTags() {
+    return await this.tagService.getTags();
   }
 
   @Get(':id')
-  getTagById(@Param('id', ParseIntPipe) tagId: number) {
-    return this.tagService.getTagById(tagId);
+  async getTagById(@Param('id', ParseIntPipe) tagId: number) {
+    return await this.tagService.getTagById(tagId);
   }
 
   @Post()
-  createTag(@Body() dto: CreateTagDto) {
-    this.tagService.createTag(dto);
+  async createTag(@Body() dto: CreateTagDto) {
+    return await this.tagService.createTag(dto);
   }
 
   @Delete(':id')
-  deleteTagById(@Param('id', ParseIntPipe) tagId: number) {
-    this.tagService.deleteTagById(tagId);
+  async deleteTagById(@Param('id', ParseIntPipe) tagId: number) {
+    return await this.tagService.deleteTagById(tagId);
   }
 
   @Patch(':id')
-  editTagById(@Param('id', ParseIntPipe) tagId: number, @Body() dto: EditTagDto) {
-    this.tagService.editTagById(tagId, dto);
+  async editTagById(@Param('id', ParseIntPipe) tagId: number, @Body() dto: EditTagDto) {
+    return await this.tagService.editTagById(tagId, dto);
   }
 }
