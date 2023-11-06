@@ -1,3 +1,6 @@
+This is gonna be my equivalent to scrum project dailies. Projects should be discussed and analysed for better
+  specifications all the time, but I don't have anyone here with me, so this should do it.
+
 25/10/2023
 Day one of this whole ordeal. Just received the assignment from HR to complete this due the 9th.
 I already made the project in my github, but I'm gonna have to study some stuff, like NestJS, how to integrate Postgres
@@ -17,8 +20,28 @@ I woke up thinking of a problem in the db: if the tag has a color, so a card can
 29/10/2023
 I finished the auth part for the user, which means I can now start messing with the bulk of the code! But I'm gonna lay
   off it for a good part of the week to make some progress in my graduation project.
+The .env file with all the sensitive information that i should keep "secreter" is commited to the git. I know how bad it
+  is and how there should e a different treatment were this a real sellable project, but since this is a localhost
+  challenge project, I'll just leave it there.
 
 02/11/2023
 Started strong by noticing the db I made was wrong s2 I didn't put board and comment owners, so I had to fix that first.
 I've almost finished the board by the end of the day, just needing to add one last feature. Here's to hoping the board
   is the most complicated logic in the project...
+
+03/11/2023
+I focused on all of the functionalities besides the card, because it seems like the bigger one, and I wanted to finish
+  the smaller ones first.
+
+04/11/2023
+I was thinking of how to solve the cascading deletes that would happen if I deleted, say, a board, and I found the
+  cascade prisma property! This is gonna make my job much more robust and easier!
+I also made the tag fk in card be optional, so a card should be able to not have a tag.
+
+05/11/2023
+I don't think I'll have time to complete all e2e tests I wanted to complete, so I'll focus on the good path to at least
+  test the application. I found out and corrected some errors, like the one where I underestimated my use of asyncs and
+  awaits, but that was the whole point, and the project is now tested for each of its prioritized features. I know of
+  two bugs, where different status lists can have the same position in a card, and where users aren't erased from the
+  user list in cards when they leave the card, but I instead focused on completing the main e2e tests and creating
+  javadoc comments for the dto's and services.

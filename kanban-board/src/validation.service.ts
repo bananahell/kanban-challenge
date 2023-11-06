@@ -264,4 +264,27 @@ export class ValidationService {
     }
     return attachment;
   }
+
+  /**
+   * Checks new position of status list isn't already taken in the board.
+   * @param boardId Status list's board id.
+   * @param position New position of status list.
+   * @returns The status list's board, forbidden exception if status list position is taken.
+   */
+  async checkForExistingPositionedStatusList(boardId: number, position: number) {
+    const board = await this.prismaService.board.findUnique({
+      where: {
+        id: boardId,
+        statusLists: {
+          some: {
+            position: position,
+          },
+        },
+      },
+    });
+    if (board) {
+      throw new ForbiddenException(ErrorMessages.CantPositionStatusList);
+    }
+    return board;
+  }
 }

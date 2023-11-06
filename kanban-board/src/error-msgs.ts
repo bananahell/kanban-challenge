@@ -11,4 +11,5 @@ export enum ErrorMessages {
   CantRemoveOwnerUser = 'Owner cannot remove self from board users!',
   CantPassOwnerToOwner = 'Ownership cannot be passed to owner!',
   UserNotInBoard = 'Cannot see boards in which user is not working in!',
+  CantPositionStatusList = "Cannot position status list in another status list's position!",
 }

@@ -56,6 +56,7 @@ export class StatusListService {
    */
   async createStatusList(userId: number, dto: CreateStatusListDto) {
     await this.validationService.checkForBoardUser(userId, dto.boardId);
+    await this.validationService.checkForExistingPositionedStatusList(dto.boardId, dto.position);
     return await this.prismaService.statusList.create({
       data: {
         ...dto,
@@ -86,7 +87,11 @@ export class StatusListService {
    * @returns The just edited status list.
    */
   async editStatusListById(userId: number, statusListId: number, dto: EditStatusListDto) {
-    await this.validationService.checkForStatusListUser(userId, statusListId);
+    const statusList = await this.validationService.checkForStatusListUser(userId, statusListId);
+    await this.validationService.checkForExistingPositionedStatusList(
+      statusList.boardId,
+      dto.position,
+    );
     return await this.prismaService.statusList.update({
       where: {
         id: statusListId,
