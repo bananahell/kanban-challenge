@@ -25,6 +25,7 @@ Run ```npm run test:e2e``` to run end to end tests.
 End-to-end point documentation containing all of the api's paths available at ```http://localhost:3333/api``` right after server is started.  
 
 Using [npm](https://www.npmjs.com/) version 20.9.0.  
+As with any node project, install node modules by running ```npm install```.  
 The project uses [PostgreSQL](https://www.postgresql.org/) inside a [Docker](https://www.docker.com/) container.  
 [Prisma](https://www.prisma.io/) is used to connect the project with the database.  
 For class validation pipes inside my DTOs, I'm using [Validation pipes](https://docs.nestjs.com/techniques/validation).  

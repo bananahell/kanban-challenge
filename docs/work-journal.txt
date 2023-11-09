@@ -52,3 +52,13 @@ I tried plugging in new documentation to the project, besides the database diagr
   too?). Since I had made the javadoc comments prior, I looked for some use of doxygen in Typescript, with no success. I
   just ended up using Swagger, even though I didn't like how ugly it was. It's also not fully functional, not being able
   to make requisitions with bearer authorization tokens. I'll jump boat from this idea for now.
+I fixed the issues of the positions of the status lists and of the card users being removed. I then finished the
+  optional requirements, that being the board roles. I also made an endpoint for moving cards.
+Well, this is it. 6h30 until the deadline, and it's pretty dark, and I'm beat from working in my thesis, so I'll wrap
+  this up and call it done. Some TODOs were left in this project:
+    - Changing user board roles (not adding or deleting, CHANGING them);
+    - Some intuitive routes, like marking checklist items as done or undone;
+    - Some logic for the grouping of status lists, and not just random non-equal numbers;
+    - Webhooks, as asked;
+    - Better documentation;
+Off now. Am pretty happy that my thesis is just needing writing now. Getting a job right now would really be amazing too...
