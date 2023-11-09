@@ -15,7 +15,10 @@ import { ChecklistItemService } from './checklist-item.service';
 import { GetUser } from '../auth/decorator';
 import { CreateChecklistItemDto, EditChecklistItemDto } from './dto';
 import { JwtGuard } from '../auth/guard';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('checklist-items')
 @UseGuards(JwtGuard)
 @Controller('checklist-items')
 export class ChecklistItemController {

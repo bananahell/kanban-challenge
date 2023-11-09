@@ -15,17 +15,21 @@ import { JwtGuard } from '../auth/guard';
 import { AttachmentService } from './attachment.service';
 import { GetUser } from '../auth/decorator';
 import { CreateAttachmentDto, EditAttachmentDto } from './dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('attachments')
 @UseGuards(JwtGuard)
 @Controller('attachments')
 export class AttachmentController {
   constructor(private attachmentService: AttachmentService) {}
 
+  @ApiBearerAuth()
   @Get('card/:id')
   getAttachmentsByCard(@GetUser('id') userId: number, @Param('id', ParseIntPipe) cardId: number) {
     return this.attachmentService.getAttachmentsByCard(userId, cardId);
   }
 
+  @ApiBearerAuth()
   @Get(':id')
   getAttachmentById(
     @GetUser('id') userId: number,
@@ -34,11 +38,13 @@ export class AttachmentController {
     return this.attachmentService.getAttachmentById(userId, attachmentId);
   }
 
+  @ApiBearerAuth()
   @Post()
   createAttachment(@GetUser('id') userId: number, @Body() dto: CreateAttachmentDto) {
     return this.attachmentService.createAttachment(userId, dto);
   }
 
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async deleteAttachmentById(
@@ -48,6 +54,7 @@ export class AttachmentController {
     return await this.attachmentService.deleteAttachmentById(userId, attachmentId);
   }
 
+  @ApiBearerAuth()
   @Patch(':id')
   async editAttachmentById(
     @GetUser('id') userId: number,

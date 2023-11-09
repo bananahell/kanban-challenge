@@ -15,7 +15,10 @@ import { JwtGuard } from '../auth/guard';
 import { CommentService } from './comment.service';
 import { GetUser } from '../auth/decorator';
 import { CreateCommentDto, EditCommentDto } from './dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('comments')
 @UseGuards(JwtGuard)
 @Controller('comments')
 export class CommentController {

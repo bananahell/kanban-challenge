@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
 /**
@@ -5,6 +6,9 @@ import { IsOptional, IsString } from 'class-validator';
  * @param title Checklist's title.
  */
 export class EditChecklistDto {
+  @ApiProperty({
+    description: "Checklist's title.",
+  })
   @IsString()
   @IsOptional()
   title: string;

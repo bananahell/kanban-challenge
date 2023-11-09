@@ -15,7 +15,10 @@ import { StatusListService } from './status-list.service';
 import { JwtGuard } from '../auth/guard';
 import { GetUser } from '../auth/decorator';
 import { CreateStatusListDto, EditStatusListDto } from './dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('status-lists')
 @UseGuards(JwtGuard)
 @Controller('status-lists')
 export class StatusListController {

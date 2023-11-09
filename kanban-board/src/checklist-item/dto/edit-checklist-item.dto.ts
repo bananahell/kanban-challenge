@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 /**
@@ -6,10 +7,16 @@ import { IsBoolean, IsOptional, IsString } from 'class-validator';
  * @param isDone Boolean status of this checklist item being done or not.
  */
 export class EditChecklistItemDto {
+  @ApiProperty({
+    description: "Checklist item's description.",
+  })
   @IsString()
   @IsOptional()
   description?: string;
 
+  @ApiProperty({
+    description: 'Boolean status of this checklist item being done or not.',
+  })
   @IsBoolean()
   @IsOptional()
   isDone?: boolean;

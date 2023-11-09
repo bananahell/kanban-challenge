@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 /**
@@ -7,14 +8,23 @@ import { IsNotEmpty, IsOptional, IsString } from 'class-validator';
  * @param fontColor Tag's font color.
  */
 export class CreateTagDto {
+  @ApiProperty({
+    description: "Tag's name.",
+  })
   @IsString()
   @IsNotEmpty()
   name: string;
 
+  @ApiProperty({
+    description: "Tag's background color.",
+  })
   @IsString()
   @IsOptional()
   backgroundColor?: string;
 
+  @ApiProperty({
+    description: "Tag's font color.",
+  })
   @IsString()
   @IsOptional()
   fontColor?: string;

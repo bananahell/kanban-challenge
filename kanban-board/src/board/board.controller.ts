@@ -15,48 +15,58 @@ import { GetUser } from '../auth/decorator';
 import { BoardService } from './board.service';
 import { JwtGuard } from '../auth/guard';
 import { ManageBoardUserDto, CreateBoardDto, EditBoardDto } from './dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('boards')
 @UseGuards(JwtGuard)
 @Controller('boards')
 export class BoardController {
   constructor(private boardService: BoardService) {}
 
+  @ApiBearerAuth()
   @Get()
   getBoards(@GetUser('id') userId: number) {
     return this.boardService.getBoards(userId);
   }
 
+  @ApiBearerAuth()
   @Get(':id')
   getBoardById(@GetUser('id') userId: number, @Param('id', ParseIntPipe) boardId: number) {
     return this.boardService.getBoardById(userId, boardId);
   }
 
+  @ApiBearerAuth()
   @Post()
   createBoard(@GetUser('id') userId: number, @Body() dto: CreateBoardDto) {
     return this.boardService.createBoard(userId, dto);
   }
 
+  @ApiBearerAuth()
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async deleteBoardById(@GetUser('id') userId: number, @Param('id', ParseIntPipe) boardId: number) {
     return await this.boardService.deleteBoardById(userId, boardId);
   }
 
+  @ApiBearerAuth()
   @Patch('add-user')
   async addBoardUser(@GetUser('id') userId: number, @Body() dto: ManageBoardUserDto) {
     return await this.boardService.addBoardUser(userId, dto);
   }
 
+  @ApiBearerAuth()
   @Patch('remove-user')
   async removeBoardUser(@GetUser('id') userId: number, @Body() dto: ManageBoardUserDto) {
     return await this.boardService.removeBoardUser(userId, dto);
   }
 
+  @ApiBearerAuth()
   @Patch('pass-owner')
   async passOwnership(@GetUser('id') userId: number, @Body() dto: ManageBoardUserDto) {
     return await this.boardService.passOwnership(userId, dto);
   }
 
+  @ApiBearerAuth()
   @Patch(':id')
   async editBoardById(
     @GetUser('id') userId: number,

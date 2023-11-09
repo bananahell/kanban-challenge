@@ -12,7 +12,10 @@ import {
 import { JwtGuard } from '../auth/guard';
 import { TagService } from './tag.service';
 import { CreateTagDto, EditTagDto } from './dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('tags')
 @UseGuards(JwtGuard)
 @Controller('tags')
 export class TagController {

@@ -22,6 +22,7 @@ Run ```npm run test:e2e``` to run end to end tests.
 
 
 [Docs folder](https://github.com/bananahell/kanban-challenge/tree/main/docs) contains a ["daily mock"](https://github.com/bananahell/kanban-challenge/blob/main/docs/work-journal.txt) in text form, and the database's diagram in [PNG format](https://github.com/bananahell/kanban-challenge/blob/main/docs/bd-diagram.png) and [text format](https://github.com/bananahell/kanban-challenge/blob/main/docs/bd-diagram.txt).  
+End-to-end point documentation containing all of the api's paths available at ```http://localhost:3333/api``` right after server is started.  
 
 Using [npm](https://www.npmjs.com/) version 20.9.0.  
 The project uses [PostgreSQL](https://www.postgresql.org/) inside a [Docker](https://www.docker.com/) container.  
@@ -32,3 +33,4 @@ For environment variables usage, [NestJS config](https://docs.nestjs.com/techniq
 For JWT passports for authentication usage, [JWT passports](https://docs.nestjs.com/security/authentication).  
 For e2e test mocking, I'm using [pactum](https://pactumjs.github.io/).  
 To use different config files in dev and testing, I'm using [dotenv](https://docs.nestjs.com/techniques/configuration).  
+For e2e documentation, I'm using [OpenAPI Swagger](https://docs.nestjs.com/openapi/introduction).  

@@ -15,7 +15,10 @@ import { JwtGuard } from '../auth/guard';
 import { CardService } from './card.service';
 import { GetUser } from '../auth/decorator';
 import { CreateCardDto, EditCardDto, ManageCardUserDto } from './dto';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('cards')
 @UseGuards(JwtGuard)
 @Controller('cards')
 export class CardController {

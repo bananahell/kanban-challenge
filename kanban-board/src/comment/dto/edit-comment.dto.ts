@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
 
 /**
@@ -5,6 +6,9 @@ import { IsOptional, IsString } from 'class-validator';
  * @param message Comment's message.
  */
 export class EditCommentDto {
+  @ApiProperty({
+    description: "Comment's message.",
+  })
   @IsString()
   @IsOptional()
   message?: string;
