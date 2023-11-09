@@ -102,6 +102,25 @@ export class ValidationService {
   }
 
   /**
+   * Checks for a status list with the same position as the new position inside a board.
+   * @param boardId Id of board where new status list position will be placed.
+   * @param position New status list position to be placed.
+   * @returns Nothing, forbidden exception if a status list with the new position searched is found.
+   */
+  async checkForStatusListUsedPosition(boardId: number, position: number) {
+    const statusList = await this.prismaService.statusList.findFirst({
+      where: {
+        boardId: boardId,
+        position: position,
+      },
+    });
+    if (statusList) {
+      throw new ForbiddenException(ErrorMessages.StatusListPositionTaken);
+    }
+    return statusList;
+  }
+
+  /**
    * Checks if a user is a card's board's user.
    * @param userId Session user id.
    * @param cardId Card's id

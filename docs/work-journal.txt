@@ -45,3 +45,10 @@ I don't think I'll have time to complete all e2e tests I wanted to complete, so 
   two bugs, where different status lists can have the same position in a card, and where users aren't erased from the
   user list in cards when they leave the card, but I instead focused on completing the main e2e tests and creating
   javadoc comments for the dto's and services.
+
+08/11/2023
+I had to focus on my graduation's thesis, so now I'm 10 hours away from the deadline, and work is what I'm gonna do.
+I tried plugging in new documentation to the project, besides the database diagrams and the README (and maybe this doc
+  too?). Since I had made the javadoc comments prior, I looked for some use of doxygen in Typescript, with no success. I
+  just ended up using Swagger, even though I didn't like how ugly it was. It's also not fully functional, not being able
+  to make requisitions with bearer authorization tokens. I'll jump boat from this idea for now.

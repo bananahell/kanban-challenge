@@ -12,4 +12,5 @@ export enum ErrorMessages {
   CantPassOwnerToOwner = 'Ownership cannot be passed to owner!',
   UserNotInBoard = 'Cannot see boards in which user is not working in!',
   CantPositionStatusList = "Cannot position status list in another status list's position!",
+  StatusListPositionTaken = "Status list's position already taken!",
 }

@@ -115,7 +115,40 @@ export class BoardService {
   }
 
   /**
-   * Removes a user from a board's user array.
+   * Removes user id from the user array in each card inside a board.
+   * @param userId Id of user to be removed.
+   * @param boardId Board's id.
+   */
+  async removeUserFromAllBoardCards(userId: number, boardId: number) {
+    const cardUsers = await this.prismaService.card.findMany({
+      where: {
+        statusList: {
+          board: {
+            id: boardId,
+          },
+        },
+      },
+      select: {
+        id: true,
+        users: true,
+      },
+    });
+    cardUsers.forEach(async (u) => {
+      await this.prismaService.card.update({
+        where: {
+          id: u.id,
+        },
+        data: {
+          users: {
+            set: u.users.filter((u) => u.id !== userId),
+          },
+        },
+      });
+    });
+  }
+
+  /**
+   * Removes a user from a board's user array and also each of its cards' user arrays.
    * @param userId Session user id.
    * @param dto Data from controller.
    * @returns The board updated without the deleted user.
@@ -123,6 +156,7 @@ export class BoardService {
   async removeBoardUser(userId: number, dto: ManageBoardUserDto) {
     this.validationService.checkRemoveBoardOwner(userId, dto);
     await this.validationService.checkForBoardOwner(userId, dto.boardId);
+    await this.removeUserFromAllBoardCards(dto.userId, dto.boardId);
     const boardUsers = await this.prismaService.board.findUnique({
       where: {
         id: dto.boardId,
