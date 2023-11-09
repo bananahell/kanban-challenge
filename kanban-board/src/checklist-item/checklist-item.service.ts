@@ -17,7 +17,7 @@ export class ChecklistItemService {
    * @returns All the checklist items inside the checklist.
    */
   async getChecklistItemsByChecklist(userId: number, checklistId: number) {
-    await this.validationService.checkForChecklistUser(userId, checklistId);
+    await this.validationService.checkForChecklistVisitor(userId, checklistId);
     return await this.prismaService.checklistItem.findMany({
       where: {
         checklistId: checklistId,
@@ -32,7 +32,7 @@ export class ChecklistItemService {
    * @returns All the checklist items inside the card's checklists.
    */
   async getChecklistItemsByCard(userId: number, cardId: number) {
-    await this.validationService.checkForCardUser(userId, cardId);
+    await this.validationService.checkForCardVisitor(userId, cardId);
     return await this.prismaService.checklistItem.findMany({
       where: {
         checklist: {
@@ -51,7 +51,7 @@ export class ChecklistItemService {
    * @returns The checklist item found.
    */
   async getChecklistItemsById(userId: number, checklistItemId: number) {
-    await this.validationService.checkForChecklistItemUser(userId, checklistItemId);
+    await this.validationService.checkForChecklistItemVisitor(userId, checklistItemId);
     return await this.prismaService.checklistItem.findUnique({
       where: {
         id: checklistItemId,
@@ -66,7 +66,7 @@ export class ChecklistItemService {
    * @returns The newly created checklist item.
    */
   async createChecklistItem(userId: number, dto: CreateChecklistItemDto) {
-    await this.validationService.checkForChecklistUser(userId, dto.checklistId);
+    await this.validationService.checkForChecklistMember(userId, dto.checklistId);
     return await this.prismaService.checklistItem.create({
       data: {
         isDone: false,
@@ -82,7 +82,7 @@ export class ChecklistItemService {
    * @returns Nothing.
    */
   async deleteChecklistItemById(userId: number, checklistItemId: number) {
-    await this.validationService.checkForChecklistItemUser(userId, checklistItemId);
+    await this.validationService.checkForChecklistItemMember(userId, checklistItemId);
     return await this.prismaService.checklistItem.delete({
       where: {
         id: checklistItemId,
@@ -98,7 +98,7 @@ export class ChecklistItemService {
    * @returns The just edited checklist item.
    */
   async editChecklistItemById(userId: number, checklistItemId: number, dto: EditChecklistItemDto) {
-    await this.validationService.checkForChecklistItemUser(userId, checklistItemId);
+    await this.validationService.checkForChecklistItemMember(userId, checklistItemId);
     return await this.prismaService.checklistItem.update({
       where: {
         id: checklistItemId,

@@ -18,17 +18,10 @@ export class StatusListService {
    * @returns The found status list.
    */
   async getStatusListById(userId: number, statusListId: number) {
-    await this.validationService.checkForStatusListUser(userId, statusListId);
+    await this.validationService.checkForStatusListVisitor(userId, statusListId);
     return await this.prismaService.statusList.findUnique({
       where: {
         id: statusListId,
-        board: {
-          users: {
-            some: {
-              id: userId,
-            },
-          },
-        },
       },
     });
   }
@@ -40,7 +33,7 @@ export class StatusListService {
    * @returns All the status lists of the board.
    */
   async getStatusListsOfBoard(userId: number, boardId: number) {
-    await this.validationService.checkForBoardUser(userId, boardId);
+    await this.validationService.checkForBoardVisitor(userId, boardId);
     return await this.prismaService.statusList.findMany({
       where: {
         boardId: boardId,
@@ -55,7 +48,7 @@ export class StatusListService {
    * @returns The newly created status list.
    */
   async createStatusList(userId: number, dto: CreateStatusListDto) {
-    await this.validationService.checkForBoardUser(userId, dto.boardId);
+    await this.validationService.checkForBoardMember(userId, dto.boardId);
     await this.validationService.checkForExistingPositionedStatusList(dto.boardId, dto.position);
     return await this.prismaService.statusList.create({
       data: {
@@ -71,7 +64,7 @@ export class StatusListService {
    * @returns Nothing.
    */
   async deleteStatusListById(userId: number, statusListId: number) {
-    await this.validationService.checkForBoardUser(userId, statusListId);
+    await this.validationService.checkForBoardMember(userId, statusListId);
     return await this.prismaService.statusList.delete({
       where: {
         id: statusListId,
@@ -87,11 +80,8 @@ export class StatusListService {
    * @returns The just edited status list.
    */
   async editStatusListById(userId: number, statusListId: number, dto: EditStatusListDto) {
-    const statusList = await this.validationService.checkForStatusListUser(userId, statusListId);
-    await this.validationService.checkForExistingPositionedStatusList(
-      statusList.boardId,
-      dto.position,
-    );
+    const board = await this.validationService.checkForStatusListMember(userId, statusListId);
+    await this.validationService.checkForExistingPositionedStatusList(board.id, dto.position);
     return await this.prismaService.statusList.update({
       where: {
         id: statusListId,

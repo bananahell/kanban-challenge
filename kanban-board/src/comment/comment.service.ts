@@ -30,7 +30,7 @@ export class CommentService {
    * @returns All comments made in a card.
    */
   async getCardComments(userId: number, cardId: number) {
-    await this.validationService.checkForCardUser(userId, cardId);
+    await this.validationService.checkForCardVisitor(userId, cardId);
     return await this.prismaService.comment.findMany({
       where: {
         cardId: cardId,
@@ -45,7 +45,7 @@ export class CommentService {
    * @returns The comment found.
    */
   async getCommentById(userId: number, commentId: number) {
-    await this.validationService.checkForCommentUser(userId, commentId);
+    await this.validationService.checkForCommentVisitor(userId, commentId);
     return await this.prismaService.comment.findUnique({
       where: {
         id: commentId,
@@ -60,7 +60,7 @@ export class CommentService {
    * @returns The newly created comment.
    */
   async createComment(userId: number, dto: CreateCommentDto) {
-    await this.validationService.checkForCardUser(userId, dto.cardId);
+    await this.validationService.checkForCardVisitor(userId, dto.cardId);
     return await this.prismaService.comment.create({
       data: {
         userId: userId,

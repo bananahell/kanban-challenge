@@ -182,19 +182,19 @@ describe('App e2e', () => {
         .expectBodyContains(dtoEditBoard2.background);
     });
     dtoBoardUser1 = { boardId: '$S{boardId2}', userId: '$S{userId3}' };
-    it('Add user 3 to board 2', () => {
+    it('Add user 3 to board 2 as member', () => {
       return pactum
         .spec()
-        .patch('/boards/add-user/')
+        .patch('/boards/add-member/')
         .withHeaders({ Authorization: 'Bearer $S{userAccessToken2}' })
         .withBody(dtoBoardUser1)
         .expectStatus(HttpStatus.OK);
     });
     dtoBoardUser2 = { boardId: '$S{boardId1}', userId: '$S{userId3}' };
-    it('Add user 3 to board 1', () => {
+    it('Add user 3 to board 1 as visitor', () => {
       return pactum
         .spec()
-        .patch('/boards/add-user/')
+        .patch('/boards/add-visitor/')
         .withHeaders({ Authorization: 'Bearer $S{userAccessToken1}' })
         .withBody(dtoBoardUser2)
         .expectStatus(HttpStatus.OK);
@@ -579,7 +579,8 @@ describe('App e2e', () => {
         .withBody(dtoAttachment1)
         .expectStatus(HttpStatus.CREATED)
         .expectBodyContains(dtoAttachment1.content)
-        .stores('attachmentId1', 'id');
+        .stores('attachmentId1', 'id')
+        .inspect();
     });
     it('Attachment for card 8', () => {
       return pactum

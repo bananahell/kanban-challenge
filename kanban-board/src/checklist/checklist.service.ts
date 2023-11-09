@@ -17,7 +17,7 @@ export class ChecklistService {
    * @returns All checklists inside a card.
    */
   async getChecklistsByCard(userId: number, cardId: number) {
-    await this.validationService.checkForCardUser(userId, cardId);
+    await this.validationService.checkForCardVisitor(userId, cardId);
     return await this.prismaService.checklist.findMany({
       where: {
         cardId: cardId,
@@ -32,7 +32,7 @@ export class ChecklistService {
    * @returns The checklist found.
    */
   async getChecklistById(userId: number, checklistId: number) {
-    await this.validationService.checkForChecklistUser(userId, checklistId);
+    await this.validationService.checkForChecklistVisitor(userId, checklistId);
     return await this.prismaService.checklist.findUnique({
       where: {
         id: checklistId,
@@ -47,7 +47,7 @@ export class ChecklistService {
    * @returns The newly created checklist.
    */
   async createChecklist(userId: number, dto: CreateChecklistDto) {
-    await this.validationService.checkForCardUser(userId, dto.cardId);
+    await this.validationService.checkForCardMember(userId, dto.cardId);
     return await this.prismaService.checklist.create({
       data: {
         ...dto,
@@ -62,7 +62,7 @@ export class ChecklistService {
    * @returns Nothing.
    */
   async deleteChecklistById(userId: number, checklistId: number) {
-    await this.validationService.checkForChecklistUser(userId, checklistId);
+    await this.validationService.checkForChecklistMember(userId, checklistId);
     return await this.prismaService.checklist.delete({
       where: {
         id: checklistId,
@@ -78,7 +78,7 @@ export class ChecklistService {
    * @returns The just edited checklist.
    */
   async editChecklistById(userId: number, checklistId: number, dto: EditChecklistDto) {
-    await this.validationService.checkForChecklistUser(userId, checklistId);
+    await this.validationService.checkForChecklistMember(userId, checklistId);
     return await this.prismaService.checklist.update({
       where: {
         id: checklistId,

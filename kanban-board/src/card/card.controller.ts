@@ -14,7 +14,7 @@ import {
 import { JwtGuard } from '../auth/guard';
 import { CardService } from './card.service';
 import { GetUser } from '../auth/decorator';
-import { CreateCardDto, EditCardDto, ManageCardUserDto } from './dto';
+import { CreateCardDto, EditCardDto, ManageCardUserDto, MoveCardDto } from './dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
 @ApiBearerAuth()
@@ -66,6 +66,15 @@ export class CardController {
   @Patch('remove-user')
   async removeCardUser(@GetUser('id') userId: number, @Body() dto: ManageCardUserDto) {
     return await this.cardService.removeCardUser(userId, dto);
+  }
+
+  @Patch('move-card/:id')
+  async moveCard(
+    @GetUser('id') userId: number,
+    @Param('id', ParseIntPipe) cardId: number,
+    @Body() dto: MoveCardDto,
+  ) {
+    return await this.cardService.moveCard(userId, cardId, dto);
   }
 
   @Patch(':id')

@@ -13,4 +13,9 @@ export enum ErrorMessages {
   UserNotInBoard = 'Cannot see boards in which user is not working in!',
   CantPositionStatusList = "Cannot position status list in another status list's position!",
   StatusListPositionTaken = "Status list's position already taken!",
+  UserNotBoardAdmin = 'User does not have admin permission for this!',
+  UserNotBoardMember = 'User does not have member permission for this!',
+  UserNotBoardVisitor = 'User does not have visitor permission for this!',
+  CannotChangeOwnerRole = "Board owner's role cannot be changed!",
+  UserAlreadyBoardUser = 'User already inside board!',
 }

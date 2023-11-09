@@ -17,7 +17,7 @@ export class AttachmentService {
    * @returns All attachments of a card.
    */
   async getAttachmentsByCard(userId: number, cardId: number) {
-    await this.validationService.checkForCardUser(userId, cardId);
+    await this.validationService.checkForCardVisitor(userId, cardId);
     return await this.prismaService.attachment.findMany({
       where: {
         cardId: cardId,
@@ -32,7 +32,7 @@ export class AttachmentService {
    * @returns Attachment found.
    */
   async getAttachmentById(userId: number, attachemntId: number) {
-    await this.validationService.checkForAttachmentUser(userId, attachemntId);
+    await this.validationService.checkForAttachmentVisitor(userId, attachemntId);
     return await this.prismaService.attachment.findUnique({
       where: {
         id: attachemntId,
@@ -47,7 +47,7 @@ export class AttachmentService {
    * @returns Newly created attachment.
    */
   async createAttachment(userId: number, dto: CreateAttachmentDto) {
-    await this.validationService.checkForCardUser(userId, dto.cardId);
+    await this.validationService.checkForCardMember(userId, dto.cardId);
     return await this.prismaService.attachment.create({
       data: {
         ...dto,
@@ -62,7 +62,7 @@ export class AttachmentService {
    * @returns Nothing.
    */
   async deleteAttachmentById(userId: number, attachemntId: number) {
-    await this.validationService.checkForAttachmentUser(userId, attachemntId);
+    await this.validationService.checkForAttachmentMember(userId, attachemntId);
     return await this.prismaService.attachment.delete({
       where: {
         id: attachemntId,
@@ -78,7 +78,7 @@ export class AttachmentService {
    * @returns The just edited attachment.
    */
   async editAttachmentById(userId: number, attachemntId: number, dto: EditAttachmentDto) {
-    await this.validationService.checkForAttachmentUser(userId, attachemntId);
+    await this.validationService.checkForAttachmentMember(userId, attachemntId);
     return await this.prismaService.attachment.update({
       where: {
         id: attachemntId,

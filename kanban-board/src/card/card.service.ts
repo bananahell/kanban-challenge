@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { ValidationService } from '../validation.service';
-import { CreateCardDto, EditCardDto, ManageCardUserDto } from './dto';
+import { CreateCardDto, EditCardDto, ManageCardUserDto, MoveCardDto } from './dto';
 
 @Injectable()
 export class CardService {
@@ -34,7 +34,7 @@ export class CardService {
    * @returns All cards inside the status list.
    */
   async getCardsOfStatusList(userId: number, statusListId: number) {
-    await this.validationService.checkForStatusListUser(userId, statusListId);
+    await this.validationService.checkForStatusListVisitor(userId, statusListId);
     return await this.prismaService.card.findMany({
       where: {
         statusListId: statusListId,
@@ -49,7 +49,7 @@ export class CardService {
    * @returns All cards inside the board.
    */
   async getCardsOfBoard(userId: number, boardId: number) {
-    await this.validationService.checkForBoardUser(userId, boardId);
+    await this.validationService.checkForBoardVisitor(userId, boardId);
     return await this.prismaService.card.findMany({
       where: {
         statusList: {
@@ -66,7 +66,7 @@ export class CardService {
    * @returns The card with the specified id.
    */
   async getCardById(userId: number, cardId: number) {
-    await this.validationService.checkForCardUser(userId, cardId);
+    await this.validationService.checkForCardVisitor(userId, cardId);
     return await this.prismaService.card.findUnique({
       where: {
         id: cardId,
@@ -81,7 +81,7 @@ export class CardService {
    * @returns The newly created card.
    */
   async createCard(userId: number, dto: CreateCardDto) {
-    await this.validationService.checkForStatusListUser(userId, dto.statusListId);
+    await this.validationService.checkForStatusListMember(userId, dto.statusListId);
     return await this.prismaService.card.create({
       data: {
         ...dto,
@@ -96,7 +96,7 @@ export class CardService {
    * @returns Nothing.
    */
   async deleteCardById(userId: number, cardId: number) {
-    await this.validationService.checkForCardUser(userId, cardId);
+    await this.validationService.checkForCardMember(userId, cardId);
     return await this.prismaService.card.delete({
       where: {
         id: cardId,
@@ -111,7 +111,7 @@ export class CardService {
    * @returns The card updated with the new user.
    */
   async addCardUser(userId: number, dto: ManageCardUserDto) {
-    await this.validationService.checkForCardUser(userId, dto.cardId);
+    await this.validationService.checkForCardMember(userId, dto.cardId);
     return await this.prismaService.card.update({
       where: {
         id: dto.cardId,
@@ -133,7 +133,7 @@ export class CardService {
    * @returns The card updated without the removed user.
    */
   async removeCardUser(userId: number, dto: ManageCardUserDto) {
-    await this.validationService.checkForCardUser(userId, dto.cardId);
+    await this.validationService.checkForCardMember(userId, dto.cardId);
     const cardUsers = await this.prismaService.card.findUnique({
       where: {
         id: dto.cardId,
@@ -162,13 +162,32 @@ export class CardService {
    * @returns The just edited card.
    */
   async editCardById(userId: number, cardId: number, dto: EditCardDto) {
-    await this.validationService.checkForCardUser(userId, cardId);
+    await this.validationService.checkForCardMember(userId, cardId);
     return await this.prismaService.card.update({
       where: {
         id: cardId,
       },
       data: {
         ...dto,
+      },
+    });
+  }
+
+  /**
+   * Moves a card to a different status list.
+   * @param userId Session user id.
+   * @param cardId Card's id.
+   * @param dto Data from controller
+   * @returns The card in the updated status list.
+   */
+  async moveCard(userId: number, cardId: number, dto: MoveCardDto) {
+    await this.validationService.checkForCardMember(userId, cardId);
+    return await this.prismaService.card.update({
+      where: {
+        id: cardId,
+      },
+      data: {
+        statusListId: dto.statusListId,
       },
     });
   }

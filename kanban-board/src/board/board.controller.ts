@@ -49,9 +49,21 @@ export class BoardController {
   }
 
   @ApiBearerAuth()
-  @Patch('add-user')
-  async addBoardUser(@GetUser('id') userId: number, @Body() dto: ManageBoardUserDto) {
-    return await this.boardService.addBoardUser(userId, dto);
+  @Patch('add-admin')
+  async addBoardAdmin(@GetUser('id') userId: number, @Body() dto: ManageBoardUserDto) {
+    return await this.boardService.addBoardAdmin(userId, dto);
+  }
+
+  @ApiBearerAuth()
+  @Patch('add-member')
+  async addBoardMember(@GetUser('id') userId: number, @Body() dto: ManageBoardUserDto) {
+    return await this.boardService.addBoardMember(userId, dto);
+  }
+
+  @ApiBearerAuth()
+  @Patch('add-visitor')
+  async addBoardVisitor(@GetUser('id') userId: number, @Body() dto: ManageBoardUserDto) {
+    return await this.boardService.addBoardVisitor(userId, dto);
   }
 
   @ApiBearerAuth()
